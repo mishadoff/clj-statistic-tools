@@ -1,0 +1,37 @@
+import java.util.*;
+public class Smilies {
+	public static void main(String[] args) {
+		Scanner s = new Scanner(System.in);
+		int n = Integer.parseInt(s.nextLine());
+		for (int i = 0; i < n; i++) {
+			char[] str = s.nextLine().toCharArray();
+			int L = 0, R = 0; // both inclusive
+			boolean fail = false;
+			for (int c = 0; c < str.length; c++) {
+//				System.out.println(L+","+R);
+				boolean prevIsColon = c > 0 && str[c-1] == ':';
+				if (str[c] == '(') {
+					if (!prevIsColon) {
+						L++;
+					}
+					R++;
+				} else if (str[c] == ')') {
+					if (!prevIsColon) {
+						R--;
+					}
+					L--;
+				}
+				if (L < 0) {
+					L = 0;
+				}
+				if (L > R) {
+					fail = true;
+					break;
+				}
+			}
+//			System.out.println(L+","+R);
+			fail |= L != 0;
+			System.out.printf("Case #%d: %s\n",i+1,fail ? "NO" : "YES");
+		}
+	}
+}

@@ -1,0 +1,32 @@
+allowed = set("abcdefghijklmnopqrstuvwxyz :()")
+
+def is_allowed(s, o = 0):
+  if o < 0:
+    return False
+  if not s or s == ":":
+    return o == 0
+  c = s[0]
+  if not c in "():" or s == ":":
+    return is_allowed(s[1:], o)
+  if c == '(':
+    return is_allowed(s[1:], o + 1)
+  if c == ')':
+    return is_allowed(s[1:], o - 1)
+  # c is ':'
+  if not s[1] in "()":
+    return is_allowed(s[1:], o)
+  return is_allowed(s[1:], o) or is_allowed(s[2:], o)
+
+def solve(s):
+  if any(c not in allowed for c in s) or not is_allowed(s):
+    return "NO"
+  return "YES"
+
+FILE = "input.txt"
+OUTPUT = "output.txt"
+with open(FILE, 'r') as fr:
+  with open(OUTPUT, 'w') as fw:
+    m = int(fr.readline())
+    for i in xrange(1, m + 1):
+      r = solve(fr.readline().rstrip('\n'))
+      fw.write("Case #" + str(i) + ": " + str(r) + "\n")

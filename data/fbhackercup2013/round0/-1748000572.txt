@@ -1,0 +1,15 @@
+T = int(raw_input())
+
+for z in xrange(1,T+1):
+    s = raw_input().strip().lower()
+    
+    num = [0 for i in xrange(26)]
+    for i in xrange(len(s)):
+        if 'a' <= s[i] and s[i] <= 'z':
+            num[ord(s[i])-ord('a')] += 1
+    num = sorted(num)
+
+    t = 0
+    for i in xrange(26):
+        t += (i+1)*num[i]
+    print "Case #%d: %d" % (z, t)

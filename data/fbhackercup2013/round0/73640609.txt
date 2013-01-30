@@ -1,0 +1,109 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Queue;
+import java.util.TreeSet;
+import java.util.concurrent.ArrayBlockingQueue;
+
+public class ProblemC {
+	public static void main(String[] args) throws IOException {
+		BufferedReader s = new BufferedReader(new InputStreamReader(System.in));
+		PrintWriter out = new PrintWriter(System.out);
+		int T = Integer.valueOf(s.readLine());
+		for (int t = 1 ; t <= T ; t++) {
+			String[] nk = s.readLine().split(" ");
+			int n = Integer.valueOf(nk[0]);
+			int k = Integer.valueOf(nk[1]);
+			String[] abcr = s.readLine().split(" ");
+			long a = Integer.valueOf(abcr[0]);
+			long b = Integer.valueOf(abcr[1]);
+			long c = Integer.valueOf(abcr[2]);
+			long r = Integer.valueOf(abcr[3]);
+			long[] m = new long[k];
+			m[0] = a;
+			for (int i = 1 ; i < k ; i++) {
+				m[i] = (b * m[i-1] + c) % r;
+			}
+			out.println("Case #" + t + ": " + solveFast(m, n));
+		}
+		out.flush();
+	}
+
+	private static long solveFast(long[] m, int n) {
+		int k = m.length;
+		
+		long[] f = m.clone();
+		Arrays.sort(f);
+		TreeSet<Long> q1 = new TreeSet<Long>();
+		long pt = 0;
+		for (int i = 0 ; i < k ; i++) {
+			while (pt <= 2 * k && pt < f[i]) {
+				q1.add(pt);
+				pt++;
+			}
+			if (pt == f[i]) {
+				pt++;
+			}
+		}
+		if (pt > f[k-1]) {
+			while (pt <= 2 * k) {
+				q1.add(pt);
+				pt++;
+			}
+		}
+		
+		Queue<Long> q2 = new ArrayBlockingQueue<Long>(k+1);
+		Map<Long, Integer> nmap = new HashMap<Long, Integer>();
+		for (int i = 0 ; i < k ; i++) {
+			q2.add(m[i]);
+			if (!nmap.containsKey(m[i])) {
+				nmap.put(m[i], 0);
+			}
+			nmap.put(m[i], nmap.get(m[i]) + 1);
+		}
+		
+		int cnt = 0;
+		long last = 0;
+		for (int i = k ; i < n ; i++) {
+			long in = q1.pollFirst();
+			q2.add(in);
+			if (!nmap.containsKey(in)) {
+				nmap.put(in, 0);
+			}
+			nmap.put(in, nmap.get(in) + 1);
+
+			last = in;
+			long out = q2.poll();
+			if (nmap.get(out) == 1) {
+				q1.add(out);
+			}
+			nmap.put(out, nmap.get(out) - 1);
+			
+			cnt++;
+			if (cnt >= 2 * k) {
+				long[] m2 = new long[k+1];
+				m2[0] = out;
+				for (int j = 1 ; j <= k ; j++) {
+					m2[j] = q2.poll();
+				}
+				return solvePerm(m2, n - (i + 1));
+			}
+		}
+		return last;
+	}
+
+
+	private static long solvePerm(long[] m, int diff) {
+		int k = m.length;
+		diff = (diff + k - 1) % k;
+		return m[diff];
+	}
+
+	public static void debug(Object... os){
+		System.err.println(Arrays.deepToString(os));
+	}
+}

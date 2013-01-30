@@ -1,0 +1,87 @@
+#include <vector>
+#include <list>
+#include <map>
+#include <set>
+#include <deque>
+#include <queue>
+#include <stack>
+#include <bitset>
+#include <algorithm>
+#include <functional>
+#include <numeric>
+#include <utility>
+#include <sstream>
+#include <iostream>
+#include <iomanip>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <cctype>
+#include <string>
+#include <cstring>
+#include <ctime>
+#include <string.h>
+
+using namespace std;
+
+typedef long long int64;
+typedef unsigned long long uint64;
+#define two(X) (1<<(X))
+#define twoL(X) (((int64)(1))<<(X))
+#define contain(S,X) (((S)&two(X))!=0)
+#define containL(S,X) (((S)&twoL(X))!=0)
+const double pi=acos(-1.0);
+const double eps=1e-11;
+template<class T> inline void checkmin(T &a,T b){if(b<a) a=b;}
+template<class T> inline void checkmax(T &a,T b){if(b>a) a=b;}
+template<class T> inline T sqr(T x){return x*x;}
+typedef pair<int,int> ipair;
+#define SIZE(A) ((int)A.size())
+#define LENGTH(A) ((int)A.length())
+#define MP(A,B) make_pair(A,B)
+#define PB(X) push_back(X)
+
+const int maxsize=1000000+5;
+
+int n,k;
+int a,b,c,r;
+int d[maxsize];
+int cnt[maxsize];
+
+int main()
+{
+	//freopen("sample.in","r",stdin);
+	freopen("C.in","r",stdin); freopen("C.out","w",stdout);
+	int testcase;
+	scanf("%d",&testcase);
+	for (int case_id=1;case_id<=testcase;case_id++)
+	{
+		scanf("%d%d%d%d%d%d",&n,&k,&a,&b,&c,&r);
+		d[0]=a;
+		for (int i=1;i<k;i++) d[i]=(int)(((int64)b*d[i-1]+c)%r);
+		for (int i=0;i<k;i++) if (d[i]>maxsize-1) d[i]=maxsize-1;
+		memset(cnt,0,sizeof(cnt));
+		for (int i=0;i<k;i++) cnt[d[i]]++;
+		set<int> heap;
+		for (int i=0;i<maxsize;i++) if (cnt[i]==0) heap.insert(i);
+		int m=k+k+5;
+		for (int p=k;p<m;p++)
+		{
+			d[p]=*heap.begin();
+			heap.erase(heap.begin());
+			cnt[d[p]]++;
+			if ((--cnt[d[p-k]])==0) heap.insert(d[p-k]);
+		}
+		printf("Case #%d: ",case_id);
+		n--;
+		if (n<m)
+			printf("%d\n",d[n]);
+		else
+		{
+			int s=m-(k+1);
+			printf("%d\n",d[s+(n-s)%(k+1)]);
+		}
+	}
+	return 0;
+}
+

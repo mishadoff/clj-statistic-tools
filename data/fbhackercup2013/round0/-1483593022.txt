@@ -1,0 +1,70 @@
+import java.util.*;
+
+public class Min {
+  public static void main(String[] args) {
+    Scanner in = new Scanner(System.in);
+    int t = in.nextInt();
+    for (int caseNum = 1; caseNum <= t; ++caseNum) {
+      int n = in.nextInt();
+      int k = in.nextInt();
+      long a = in.nextLong();
+      long b = in.nextLong();
+      long c = in.nextLong();
+      long r = in.nextLong();
+      
+      int[] generated = generate(a, b, c, r, k);
+      int[] pattern = getPattern(generated);
+      //System.out.printf("Error checking: generated = %s\n", Arrays.toString(generated));
+      //System.out.printf("Error checking: pattern = %s\n", Arrays.toString(pattern));
+      System.out.printf("Case #%d: %d\n", caseNum, pattern[(n-k-1) % pattern.length]);
+    }
+  }
+  
+  public static int[] getPattern(int[] generated) {
+    int[] ret = new int[generated.length + 1];
+    int len = generated.length;
+    boolean[] used = new boolean[len+1];
+    int[] locs = new int[len+1];
+    for (int i = 0; i < generated.length; ++i) {
+      if (generated[i] < len) {
+        if (used[generated[i]]) {
+          generated[locs[generated[i]]] = len + 10;
+        }
+        used[generated[i]] = true;
+        locs[generated[i]] = i;
+      }
+    }
+    Arrays.fill(ret, -1);
+    for (int i = 0; i < used.length; ++i) {
+      if (used[i]) {
+        ret[locs[i]+1] = i;
+      }
+    }
+    int unusedIdx = 0;
+    int retIdx = 0;
+    while (retIdx < ret.length) {
+      while (used[unusedIdx])
+        ++unusedIdx;
+      ret[retIdx] = unusedIdx;
+      used[unusedIdx] = true;
+      while (unusedIdx < used.length && used[unusedIdx])
+        ++unusedIdx;
+      // want to stop if ret[retIdx] == -1 or ret[retIdx] = k, and k > the next unused idx
+      while (retIdx < ret.length && ret[retIdx] != -1 && ret[retIdx] <= unusedIdx)
+        ++retIdx;
+      if (retIdx < ret.length && ret[retIdx] != -1) {
+        used[ret[retIdx]] = false;
+      }
+    }
+    return ret;
+  }
+  
+  public static int[] generate(long a, long b, long c, long r, int k) {
+    int[] ret = new int[k];
+    ret[0] = (int)a;
+    for (int i = 1; i < k; ++i) {
+      ret[i] = (int)((b * ret[i-1] + c) % r);
+    }
+    return ret;
+  }
+}

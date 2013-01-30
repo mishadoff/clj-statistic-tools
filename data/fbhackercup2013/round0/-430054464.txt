@@ -1,0 +1,54 @@
+#include<cstdio>
+#include<algorithm>
+#include<cstring>
+#include<set>
+using namespace std;
+
+int n,k,t;
+int w,x,y,z;
+int A[500000];
+
+int main()
+{
+	freopen("input.txt","r",stdin);
+	freopen("output.txt","w",stdout);
+	scanf("%d",&t);
+	for(int c=1;c<=t;c++)
+	{
+		scanf("%d%d",&n,&k);
+		n --;
+		scanf("%d%d%d%d",&w,&x,&y,&z);
+		A[0] = w;
+		multiset<int> P;
+		set<int> N;
+		P.insert( w );
+		for(int d=1;d<k;d++)
+		{
+			long long r = 1ll;
+			r *= (long long)(x);
+			r *= (long long)(A[d-1]);
+			r += (long long)(y);
+			r %= (long long)(z);
+			A[d] = (int)(r);
+			P.insert( A[d] );
+			//if( A[d] < 0 ) printf("GG");
+			//printf("%d -\n",A[d]);
+			//printf("%d : %d\n",d,A[d]);
+		}
+		for(int d=0;d<=k;d++) if( P.find( d ) == P.end() ) N.insert( d );
+		for(int d=k;d<2*k;d++)
+		{
+			A[d] = *N.begin();
+			N.erase( N.begin() );
+			P.insert( *N.begin() );
+			P.erase( P.find( A[d-k] ) );
+			if( P.find( A[d-k] ) == P.end() ) N.insert( A[d-k] );
+		}
+		n -= (k);
+		n %= (k+1);
+		n += (k);
+		//if( n >= 2*k ) n
+		//for(int d=0;d<=n;d++) printf("%d : %d\n",d,A[d]);
+		printf("Case #%d: %d\n",c,A[n]);
+	}
+}

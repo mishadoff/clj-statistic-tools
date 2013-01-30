@@ -1,0 +1,46 @@
+#include <cstdio>
+#include <cstring>
+
+using namespace std;
+
+int PD[128][128];
+char s[128];
+int n, T, C=1;
+
+bool lower(char c) {
+    return ('a' <= c and c <= 'z');
+}
+
+int calc(int ini, int fim) {
+    int &pd = PD[ini][fim];
+    if (pd != -1) return pd;
+    if (ini > fim) return pd=1;
+    bool soh=true;
+    for (int i=ini;i<=fim;i++)
+        if (!lower(s[i]) and s[i]!=' ' and s[i] != ':') {
+            soh=false;
+            break;
+        }
+    if (soh) return pd=1;
+    if (s[ini]=='(' and s[fim]==')' and calc(ini+1,fim-1)==1)
+        return pd=1;
+    for (int i=ini;i<fim;i++)
+        if (calc(ini,i)==1 and calc(i+1,fim)==1)
+            return pd=1;
+    if (fim==ini+1 and s[ini]==':' and (s[fim]==')' or s[fim]=='('))
+        return pd=1;
+    return pd=0;
+}
+
+int main() {
+
+    for(scanf("%d\n",&T);T--;) {
+        fgets(s,128,stdin);
+        n = strlen(s);
+        while (s[n-1]=='\0' or s[n-1]=='\r' or s[n-1]=='\n') n--;
+        memset(PD,0xff,sizeof(PD));
+        printf("Case #%d: %s\n",C++, calc(0,n-1)==1 ? "YES" : "NO");
+    }
+
+    return 0;
+}

@@ -1,0 +1,39 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cctype>
+#include <vector>
+#include <map>
+using namespace std;
+
+int main() {
+  int Tc;
+  cin >> Tc;
+  cin.ignore();
+  for(int tc = 0; tc < Tc; ++tc) {
+    string s;
+    getline(cin, s);
+
+    int num[128];
+    fill(num, num+128, 0);
+    for(int i = 0; i < s.size(); ++i) {
+      if(isalpha(s[i]))
+        num[tolower(s[i])] += 1;
+    }
+
+    vector<pair<int, int> > v;
+    for(int c = 'a'; c <= 'z'; ++c) {
+      v.push_back(make_pair(num[c], c));
+    }
+
+    sort(v.begin(), v.end());
+    int res = 0;
+    for(int i = 0; i < v.size(); ++i) {
+      res += num[v[i].second] * (i+1);
+    }
+
+    cout << "Case #" << tc+1 << ": " << res << endl;
+
+  }
+  return 0;
+}

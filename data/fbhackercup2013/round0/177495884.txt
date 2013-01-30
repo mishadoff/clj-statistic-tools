@@ -1,0 +1,34 @@
+import sys
+
+sys.stdin.readline()
+
+casenum = 1
+beauties = range(26, 0, -1)
+charset = "abcdefghijklmnopqrstuvwxyz"
+
+def beauty(cstr):
+	cstr = cstr.lower()
+	chars = [i for i in list(cstr) if i in charset]
+	charcounts = {}
+
+	for c in chars:
+		if c not in charcounts:
+			charcounts[c] = 0
+		charcounts[c] += 1
+
+	counts = [(charcounts[i], i) for i in charcounts]
+	counts.sort(reverse=True)
+
+	cval = 26
+	beauty = 0
+
+	for c in counts:
+		beauty += c[0] * cval
+		cval -= 1
+
+	return beauty
+
+for line in sys.stdin:
+	cstr = line.strip()
+	print "Case #%d: %d" % (casenum, beauty(cstr))
+	casenum += 1	

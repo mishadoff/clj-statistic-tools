@@ -1,0 +1,46 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+#define MAX 123123
+
+long find_the_min(long n, long k, long a, long b, long c, long r) {
+  long i, j, idx, first_free_not_before;
+  long last[MAX];
+  long used[MAX];
+  memset(used, 0, sizeof(used));
+  if (a < MAX) used[a]++;
+  last[0] = a;
+  for (i = 1; i < k; i++) {
+    last[i] = (b * last[i-1] + c) % r;
+    if (last[i] < 0) printf("ERROR: negative number: %ld\n", last[i]);
+    if (last[i] < k) used[last[i]]++;
+  }
+  idx = 0;  // last is a circular list indexed by idx
+  first_free_not_before = 0;
+  for (i = k; i < n && i <= 2*k; i++) {
+    for (j = first_free_not_before; used[j]; j++) ;
+    used[j]++;
+    first_free_not_before = j+1;
+    if (last[idx] < k) {
+      used[last[idx]]--;
+      if (used[last[idx]] == 0 && last[idx] < first_free_not_before)
+        first_free_not_before = last[idx];
+      if (used[last[idx]] < 0) printf("ERROR: out of range used count: %ld\n", used[last[idx]]);
+    }
+    last[idx] = j;
+    idx = (idx + 1) % (k+1);
+  }
+  return last[(n - i - 1 + idx + (k+1)) % (k + 1)];
+}
+
+int main () {
+  long i, m, a, b, c, r, n, k;
+  scanf("%ld\n", &m);
+  for (i = 1; i <= m; i++) {
+    scanf("%ld %ld", &n, &k);
+    scanf("%ld %ld %ld %ld", &a, &b, &c, &r);
+    printf("Case #%ld: %ld\n", i, find_the_min(n, k, a, b, c, r));
+  }
+  return 0;
+}

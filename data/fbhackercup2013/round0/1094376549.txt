@@ -1,0 +1,30 @@
+#include<cstdio>
+#include<iostream>
+#include<cstring>
+#include<string>
+#include<algorithm>
+using namespace std;
+
+int f[30];
+char s[1000];
+
+int main()
+{
+    freopen("beautiful_stringstxt.txt","r",stdin);
+    freopen("out.txt","w",stdout);
+    int n;
+    cin>>n;
+    gets(s);
+    for(int i=1;i<=n;i++)
+    {
+        gets(s);
+        memset(f,0,sizeof(f));
+        for(int j=0;s[j];j++) if(isalpha(s[j])) f[tolower(s[j])-'a']++;
+        sort(f,f+30);
+        int t=26,sum=0;
+        for(int j=29;f[j];j--,t--) sum+=t*f[j];
+        printf("Case #%d: %d\n",i,sum);
+    }
+    fclose(stdout);
+    return 0;
+}

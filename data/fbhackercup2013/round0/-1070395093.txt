@@ -1,0 +1,59 @@
+#include <iostream>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <queue>
+#include <stack>
+#include <algorithm>
+#include <utility>
+#include <map>
+#include <set>
+using namespace std;
+
+typedef long long int64;
+
+bool check(char *s, int left, int pos)
+{
+    while (s[pos] != '\0') {
+        if (s[pos] == '(') {
+            bool flag = false;
+            flag |= check(s, left + 1, pos + 1);
+            if (pos > 0 && s[pos - 1] == ':')
+                flag |= check(s, left, pos + 1);
+            return flag;
+        }
+        if (s[pos] == ')') {
+            bool flag = false;
+            if (left > 0)
+                flag |= check(s, left - 1, pos + 1);
+            if (pos > 0 && s[pos - 1] == ':')
+                flag |= check(s, left, pos + 1);
+            return flag;
+        }
+        ++pos;
+    }
+    return (left ? false : true);
+}
+
+void solve_case()
+{
+    char s[110];
+    gets(s);
+    printf("%s\n", check(s, 0, 0) ? "YES" : "NO");
+}
+
+int main()
+{
+    freopen("C:\\Users\\Lee\\Desktop\\fb.in", "r", stdin);
+    freopen("D:\\code\\fb.out", "w", stdout);
+    int ncase;
+    scanf("%d", &ncase);
+    getchar();
+    for (int icase = 1; icase <= ncase; icase++) {
+        printf("Case #%d: ", icase);
+        solve_case();
+    }
+}

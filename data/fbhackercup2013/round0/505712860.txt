@@ -1,0 +1,60 @@
+#!/usr/bin/env python3
+
+from collections import Counter, namedtuple
+import heapq
+import itertools
+import fnmatch
+import os
+
+TestCase = namedtuple('TestCase', ('n', 'k', 'a', 'b', 'c', 'r'))
+
+def readfile():
+    files = fnmatch.filter(os.listdir(), '*.txt')
+    assert len(files) == 1
+    with open(files[0], 'r') as f:
+        values = [list(map(int, i.strip().split())) for i in f.readlines()[1:]]
+        return [TestCase(n, k, a, b, c, r) for (n, k), (a, b, c, r) in zip(values[::2], values[1::2])]
+
+class PRNG:
+    def __init__(self, k, a, b, c, r):
+        self.k = k
+        self.a = a
+        self.b = b
+        self.c = c
+        self.r = r
+
+        self.array = list(itertools.islice(self.gen(a, b, c, r), self.k))
+        h = sorted(set(range(2 * self.k + 1 + 100)) - set(self.array))
+        s1 = Counter(self.array)
+        for i in range(len(self.array) + 1):
+            while True:
+                x = heapq.heappop(h)
+                if s1[x] == 0:
+                    self.array.append(x)
+                    heapq.heappush(h, self.array[i])
+                    s1[x] += 1
+                    s1[self.array[i]] -= 1
+                    break
+            
+
+    @staticmethod
+    def gen(a, b, c, r):
+        while True:
+            yield a
+            a = (b * a + c) % r
+
+    def __getitem__(self, k):
+        k -= 1
+        if k < self.k:
+            return self.array[k]
+        k -= self.k
+        return self.array[self.k + k % (self.k + 1)]
+
+inputfile = readfile()
+
+with open('../saida_c.txt', 'w') as f:
+    for x, testcase in enumerate(inputfile, 1):
+        t = PRNG(testcase.k, testcase.a, testcase.b, testcase.c, testcase.r)
+        saida = 'Case #{x:d}: {y:d}\n'.format(x=x, y=t[testcase.n])
+        f.write(saida)
+        print(saida, end='')

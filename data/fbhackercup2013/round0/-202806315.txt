@@ -1,0 +1,300 @@
+// topcoder.cpp : �R���\�[�� �A�v���P�[�V�����̃G���g�� �|�C���g���`���܂��B
+//
+
+#include <stdio.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <climits>
+#include <cfloat>
+#include <map>
+#include <utility>
+#include <set>
+#include <iostream>
+#include <memory>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <functional>
+#include <sstream>
+#include <complex>
+#include <stack>
+#include <queue>
+#include <numeric>
+
+using namespace std;
+static const double EPS = 1e-9;
+int ROUND(double x) { return (int)(x+0.5); }
+bool ISINT(double x) { return fabs(ROUND(x)-x)<=EPS; }
+bool ISEQUAL(double x,double y) { return fabs(x-y)<=EPS*max(1.0,max(fabs(x),fabs(y))); }
+double SQSUM(double x,double y) { return x*x+y*y; }
+template<class T> bool INRANGE(T x,T a,T b) { return a<=x&&x<=b; }
+#define PI	(3.14159265358979323846)
+#define ARRAY_NUM(a) (sizeof(a)/sizeof(a[0])) 
+#define NG (-1)
+#define BIG (987654321)
+#define SZ(a) ((int)a.size())
+typedef long long ll;
+
+#define FOR(v,i) for(__typeof((v).begin())i=(v).begin();i!=(v).end();++i)
+// BEGIN CUT HERE
+#undef FOR
+#define FOR(v,i) for(auto i=(v).begin();i!=(v).end();++i)
+// END CUT HERE
+
+
+#if 1
+
+int main(){
+
+	freopen("_google_code_jam_input.txt","r",stdin);
+	freopen("_google_code_jam_output.txt","w",stdout);
+
+
+	int T;
+	cin >> T;
+
+	for (int testcase = 0; testcase < T; testcase++)
+	{
+		ll n,k,a,b,c,r;
+
+		cin >> n >> k >> a >> b >> c >> r;
+
+		vector <ll> m(2*k+100);
+		vector <ll> vl;
+		m[0]=a;
+		vl.push_back(m[0]);
+		for (int i = 1; i < k; i++)
+		{
+			m[i]=(b*m[i-1]+c)%r;
+			vl.push_back(m[i]);
+		}
+
+		vl.push_back(-1);
+		vl.push_back(987654321987654321LL);
+		sort(vl.begin(),vl.end());
+		// unused
+		vector <ll> unused;
+		for (int i = 0; i < SZ(vl)-1; i++)
+		{
+			for (ll s = vl[i]+1; s <= vl[i+1]-1; s++)
+			{
+				unused.push_back(s);
+				if(SZ(unused)>=k+1)
+				{
+					goto NUKE;
+				}
+			}
+		}
+NUKE:;
+		// push�\���ǂ���
+		vector <bool> pushable(k,true);
+		{
+			 set <ll> used;
+			 
+			 for (int i=k-1;i>=0;i--)
+			 {
+				 if(used.count(m[i]))
+				 {
+					 pushable[i]=false;
+				 }
+				 else
+				 {
+					 used.insert(m[i]);
+				 }
+			 }
+		}
+
+
+
+		priority_queue<ll, vector<ll>, greater<ll> > q;
+
+		int ui = 0;
+		for (int i = k; i <= k+k; i++)
+		{
+			// �ŏ��l��T��
+			if(!q.empty() && q.top()<unused[ui] )
+			{
+				m[i]=q.top();
+				q.pop();
+			}
+			else
+			{
+				m[i]=unused[ui];
+				ui++;
+			}
+
+			if(i<k+k && pushable[i-k])
+			{
+				q.push(m[i-k]);
+			}
+		}
+
+		int ans = m[((n-1-k)%(k+1))+k];
+		printf("Case #%d: %d\n",testcase+1,ans);
+	}
+}
+
+#elif 1
+
+int memo[105][105];
+
+int dfs(const string& s, int x, int depth)
+{
+	if(x==SZ(s))
+	{
+		if(depth==0)
+		{
+			return 1;
+		}
+		else
+		{
+			return 0;
+		}
+	}
+
+	if(depth<0)
+	{
+		return 0;
+	}
+
+	if(memo[x][depth]!=NG)
+	{
+		return memo[x][depth];
+	}
+
+	int& ret = memo[x][depth];
+	ret = 0;
+	if(s[x]==':' && x+1<SZ(s))
+	{
+		if (s[x+1]=='(')
+		{
+			ret |= dfs(s, x+2, depth);
+			ret |= dfs(s, x+2, depth+1);
+		}
+		else if(s[x+1]==')')
+		{
+			ret |= dfs(s, x+2, depth);
+			ret |= dfs(s, x+2, depth-1);
+		}
+		else
+		{
+			ret |= dfs(s, x+1, depth);
+		}
+	}
+	else if (s[x]=='(')
+	{
+		ret |= dfs(s, x+1, depth+1);
+	}
+	else if (s[x]==')')
+	{
+		ret |= dfs(s, x+1, depth-1);
+	}
+	else
+	{
+		ret |= dfs(s, x+1, depth);
+	}
+
+	return ret;
+}
+
+
+
+int main(){
+
+	freopen("_google_code_jam_input.txt","r",stdin);
+	freopen("_google_code_jam_output.txt","w",stdout);
+
+	char str[10000];
+	gets(str);
+
+	stringstream ss(str);
+	int m;
+	ss >> m;
+
+	for (int testcase = 0; testcase < m; testcase++)
+	{
+		gets(str);
+		string s(str);
+
+		bool ok = true;
+		string as;
+		for (int i = 0; i < SZ(s); i++)
+		{
+			if(INRANGE(s[i],'a','z')||s[i]==' '||s[i]=='('||s[i]==')'||s[i]==':')
+			{
+			}
+			else
+			{
+				ok = false;
+			}
+		}
+
+		if(ok)
+		{
+			memset(memo,NG,sizeof(memo));
+			if(dfs(s, 0, 0)==1)
+			{
+				ok = true;
+			}
+			else
+			{
+				ok = false;
+			}
+		}
+
+
+		printf("Case #%d: %s\n",testcase+1,ok?"YES":"NO");
+
+	}
+
+
+}
+
+
+
+#else
+
+int main(){
+
+	freopen("_google_code_jam_input.txt","r",stdin);
+	freopen("_google_code_jam_output.txt","w",stdout);
+
+	char str[10000];
+	gets(str);
+
+	stringstream ss(str);
+	int m;
+	ss >> m;
+
+	for (int testcase = 0; testcase < m; testcase++)
+	{
+		gets(str);
+
+		string s(str);
+		vector <int> freq(26);
+		for (int i = 0; i < SZ(s); i++)
+		{
+			if(INRANGE(s[i],'a','z'))
+			{
+				s[i] += 'A'-'a';
+			}
+
+			if(INRANGE(s[i],'A','Z'))
+			{
+				freq[s[i]-'A']++;
+			}
+		}
+
+		sort(freq.rbegin(),freq.rend());
+		int score = 0;
+		for (int i = 0; i < SZ(freq); i++)
+		{
+			score += freq[i]*(26-i);
+		}
+
+		printf("Case #%d: %d\n",testcase+1,score);
+	}
+}
+
+#endif

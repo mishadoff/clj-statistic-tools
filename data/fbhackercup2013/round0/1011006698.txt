@@ -1,0 +1,53 @@
+#include<iostream>
+#include<vector>
+#include<string>
+#include<cmath>
+#include<algorithm>
+#include<string.h>
+#include<cstdio>
+#include<set>
+#include<map>
+#include<ctime>
+using namespace std;
+
+typedef long long Int;
+#define FOR(i,a,b) for(int i=a;i<=b;++i)
+#define sz(s) (int)(s).size()
+#define pb push_back
+#define mp make_pair
+//const int inf = 1000000000;
+//const int MOD = 1000000007;
+//#define double long double
+//const double pi = 2*acos(0.0);
+
+
+bool dp[111][111];
+
+int main()
+{
+	freopen("input.txt","r",stdin);freopen("output.txt","w",stdout);
+	int tests;
+	scanf("%d\n",&tests);
+	FOR(test,1,tests){
+		string s;getline(cin,s);
+		s=" "+s;
+		memset(dp,false,sizeof(dp));
+		dp[0][0]=true;
+		for(int i=1;i<sz(s);++i)for(int deg=0;deg<=101;++deg){
+			if(s[i]!=')' && s[i]!='('){
+				dp[i][deg]|=dp[i-1][deg];
+			}else
+			if(s[i]=='('){
+				if(deg)dp[i][deg]|=dp[i-1][deg-1];
+				if(s[i-1]==':')dp[i][deg]|=dp[i-1][deg];
+			}else
+			if(s[i]==')'){
+				dp[i][deg]|=dp[i-1][deg+1];
+				if(s[i-1]==':')dp[i][deg]|=dp[i-1][deg];
+			}
+		}
+
+		string ans = (dp[sz(s)-1][0])?"YES":"NO";
+		cout<<"Case #"<<test<<": "<<ans<<endl;
+	}
+}

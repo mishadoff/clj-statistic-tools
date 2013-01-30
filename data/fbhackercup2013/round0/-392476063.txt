@@ -1,0 +1,74 @@
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <iomanip>
+#include <cstdio>
+#include <cstring>
+#include <vector>
+#include <set>
+#include <map>
+#include <cmath>
+#include <complex>
+#include <cstdlib>
+#include <string>
+#include <algorithm>
+#include <cassert>
+#include <queue>
+#include <cctype>
+using namespace std;
+
+typedef long double Real;
+
+const Real o = 1e-8;
+const Real pi = acos(-1.0);
+const int max_k = 100010;
+
+int n, k, A, B, C, R, T, I;
+int a[max_k * 2], pos[max_k + 1];
+
+void input() {
+  cin >> n >> k >> A >> B >> C >> R;
+  --n;
+}
+
+void solve() {
+  memset(a, -1, sizeof a);
+  a[0] = A;
+  for (int i = 1; i < k; ++i)
+    a[i] = ((long long)a[i - 1] * B + C) % R;
+
+  memset(pos, -1, sizeof pos);
+  for (int i = 0; i < k; ++i) {
+    if (a[i] >= 0 && a[i] <= k)
+      pos[a[i]] = i;
+  }
+  int num = 0;
+  for (int i = k; i <= k * 2; ++i, ++num) {
+    while (a[i] != -1)
+      ++i;
+    if (pos[num] == -1 || pos[num] < i - k) {
+      a[i] = num;
+      continue;
+    }
+    a[pos[num] + k + 1] = num;
+    --i;
+  }
+}
+
+void output() {
+  if (n >= k)
+    n = (n - k) % (k + 1) + k;
+  assert(n >= 0 && n <= k * 2);
+  cout << "Case #" << I + 1 << ": " << a[n] << "\n";
+}
+
+int main() {
+  cin >> T;
+  for (I = 0; I < T; ++I) {
+    input();
+    solve();
+    output();
+  }
+	return 0;
+}
+

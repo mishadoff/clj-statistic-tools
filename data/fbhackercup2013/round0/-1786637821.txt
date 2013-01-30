@@ -1,0 +1,117 @@
+#include <cstdio>
+#include <vector>
+#include <queue>
+using namespace std;
+
+#define D(x...)
+
+const int MAX_N = 100005;
+
+typedef long long ll;
+
+int N, K;
+ll B, C, R;
+
+int known[MAX_N];
+
+bool fixed[MAX_N];
+int gen[MAX_N];
+
+int tot[MAX_N];
+
+priority_queue< int, vector<int>, greater<int> > nums;
+
+int next(int last) {
+    return (int)(((B) * ((ll)(last)) + (C)) % R);
+}
+
+int main() {
+    int T;
+    scanf("%d",&T);
+
+    for(int z=1;z<=T;z++) {
+        D("case %d\n",z);
+        scanf("%d %d",&N,&K);
+        N--;
+
+        scanf("%d",&known[0]);
+        scanf("%lld %lld %lld",&B,&C,&R);
+
+        D("seq: %d ",known[0]);
+        for(int i=1;i<K;i++) {
+            known[i] = next(known[i-1]);
+            D("%d ",known[i]);
+        }
+        D("\n");
+
+        while(!nums.empty()) {
+            nums.pop();
+        }
+
+        for(int i=0;i<MAX_N;i++) {
+            tot[i] = 0;
+            fixed[i] = false;
+        }
+
+        for(int i=0;i<K;i++) {
+            if(known[i] < MAX_N) {
+                fixed[known[i]] = true;
+                tot[known[i]]++;
+            }
+        }
+
+        for(int i=0;i<=K;i++) {
+            if(!fixed[i]) {
+                nums.push(i);
+            }
+        }
+
+        D("gen: ");
+        for(int i=0;i<K;i++) {
+            gen[i] = nums.top();
+            nums.pop();
+
+            if(known[i] < MAX_N) {
+                tot[known[i]]--;
+                if(tot[known[i]] == 0) {
+                    nums.push(known[i]);
+                }
+            }
+
+
+            D("%d ",gen[i]);
+        }
+        D("\n");
+        
+        for(int i=0;i<MAX_N;i++) {
+            fixed[i] = false;
+        }
+
+        for(int i=0;i<K;i++) {
+            fixed[gen[i]] = true;
+        }
+
+        int start;
+        for(int i=0;i<=K;i++) {
+            if(!fixed[i]) {
+                start = i;
+                break;
+            }
+        }
+
+        D("start = %d\n",start);
+
+        int ans;
+
+        int look = (N-K) % (K+1);
+        if(look < K) {
+            ans = gen[look];
+        } else {
+            ans = start;
+        }
+
+        printf("Case #%d: %d\n",z,ans);
+    }
+
+    return 0;
+}

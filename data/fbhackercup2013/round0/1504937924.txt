@@ -1,0 +1,43 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.util.Arrays;
+
+public class ProblemA {
+	public static void main(String[] args) throws IOException {
+		BufferedReader s = new BufferedReader(new InputStreamReader(System.in));
+		PrintWriter out = new PrintWriter(System.out);
+		int m = Integer.valueOf(s.readLine());
+		for (int i = 1 ; i <= m ; i++) {
+			String line = s.readLine();
+			out.println("Case #" + i + ": " + solve(line));
+		}
+		out.flush();
+	}
+
+	private static int solve(String line) {
+		int len = line.length();
+		int[] deg = new int[26];
+		for (int i = 0 ; i < len ; i++) {
+			char c = line.charAt(i);
+			if ('a' <= c && c <= 'z') {
+				deg[c-'a']++;
+			} else if ('A' <= c && c <= 'Z') {
+				deg[c-'A']++;
+			}
+		}
+		Arrays.sort(deg);
+		
+		int ans = 0;
+		for (int c = 26 ; c >= 1 ; c--) {
+			ans += deg[c-1] * c;
+		}
+		return ans;
+	}
+
+
+	public static void debug(Object... os){
+		System.err.println(Arrays.deepToString(os));
+	}
+}

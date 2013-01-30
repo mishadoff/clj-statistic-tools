@@ -1,0 +1,81 @@
+#include <vector>
+#include <list>
+#include <map>
+#include <set>
+#include <deque>
+#include <stack>
+#include <bitset>
+#include <algorithm>
+#include <functional>
+#include <iostream>
+#include <iomanip>
+#include <cstdio>
+#include <cmath>
+using namespace std;
+
+
+int converttoint(string S) {
+    int ret=0;
+    for(int i=0;i<S.size();i++)
+        ret=ret*10+S[i]-'0';
+    return ret;
+}
+
+int dp[120][120];
+
+bool isbalanced(const string& S, int st, int en) {
+    if(st>en)
+        return true;
+    
+    bool all_good = true;
+    for(int i=st;i<=en;i++) {
+        if(!((S[i]>='a' && S[i]<='z') || S[i]==' ' || S[i]==':'))
+            all_good=false;
+    }
+    if(all_good)
+        return true;
+
+    if(dp[st][en] != -1)
+        return dp[st][en];
+    
+    bool retval = false;
+    if(en-st+1>=2 && isbalanced(S, st+1, en-1) && S[st]=='(' && S[en]==')')
+        retval = true;
+    for(int mid = st; mid <= en-1; mid++) {
+        if(isbalanced(S, st, mid) && isbalanced(S, mid+1, en)) {
+            retval = true;
+            break;
+        }
+    }
+    
+    if(en-st+1==2 && S[st]==':' && S[st+1]==')')
+        retval=true;
+    if(en-st+1==2 && S[st]==':' && S[st+1]=='(')
+        retval=true;
+    
+    dp[st][en]=retval;
+    return retval;
+    
+    
+}
+
+
+int main() {
+    string Ts;
+    getline(cin,Ts);
+    int T=converttoint(Ts);
+    for(int t=1;t<=T;t++) {
+        string curr;
+        getline(cin, curr);
+        
+        for(int i=0;i<=110;i++)
+            for(int j=0;j<=110;j++)
+                dp[i][j]=-1;
+        
+        if(isbalanced(curr, 0, curr.size()-1))
+            printf("Case #%d: YES\n",t);
+        else
+            printf("Case #%d: NO\n", t);
+        
+    }
+}

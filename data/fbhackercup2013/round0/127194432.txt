@@ -1,0 +1,94 @@
+#include <algorithm>
+#include <iostream>
+#include <cmath>
+#include <vector>
+#include <set>
+using namespace std;
+#include <cstdio>
+
+//By chyx111
+#define DBG(a) do{std::cerr << #a << ": " << (a) << std::endl;}while(0)
+#ifndef likely
+#define likely(x) __builtin_expect((x), 1)
+#endif
+#define REP(i,n) for(int n_##__LINE__ = (n), i = 0; i < n_##__LINE__; ++i)
+
+template<class T> std::ostream& operator<<(std::ostream& os, std::vector<T> v)
+{
+	REP (i, v.size()){
+		if(likely(i != 0)){
+			os << ' ';
+		}
+		os << v[i];
+	}
+	return os;
+};
+
+int const kMaxn = 110000;
+long long m[kMaxn * 3];
+long long orim[kMaxn * 3];
+int a, b, c, r, K;
+
+int main()
+{
+	int ca;
+	scanf("%d", &ca);
+	REP(ica, ca){
+		int n, K;
+		scanf("%d%d", &n, &K);
+		scanf("%d%d%d%d", &a, &b, &c, &r);
+		m[0] = a;
+		for(int i = 1; i < K; ++i){
+			m[i] = (b * m[i - 1] + c) % r;
+			orim[i] = m[i];
+		}
+
+		set<int> exists, non_exists;
+		for(int i = K - 1; i >= 0; --i){
+			if(exists.count(m[i])){
+				m[i] = -1;
+			}else{
+				exists.insert(m[i]);
+			}
+		}
+		REP (i, K + 1)if(exists.count(i) == 0){
+			non_exists.insert(i);
+		}
+
+		int bnd = K + K + 1;
+		//bnd += K * 2;
+		for(int i = K; i < bnd; ++i){
+			int x;
+			if(i != K){
+				x = m[i - K - 1];
+				if(x != -1){
+					exists.erase(x);
+					non_exists.insert(x);
+				}
+			}
+
+			x = *(non_exists.begin());
+			non_exists.erase(x);
+			exists.insert(x);
+			m[i] = x;
+		}
+		//REP (i, bnd) std::cout << "(" << i <<"," << m[i] << ")" << " ";
+		//std::cout << std::endl;
+
+		n--;
+		int ans;
+		if(n >= bnd){
+			n %= K + 1;
+			while(n + K + 1 < bnd) n += K + 1;
+			//DBG(n);
+			ans = m[n];
+			if(ans == -1)ans = orim[n];
+		}else{
+			ans = m[n];
+		}
+		printf("Case #%d: %d\n", ica + 1, ans);
+	}
+	return 0;
+}
+
+

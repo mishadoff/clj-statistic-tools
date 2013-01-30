@@ -1,0 +1,65 @@
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <iomanip>
+#include <cstdio>
+#include <cstring>
+#include <vector>
+#include <set>
+#include <map>
+#include <cmath>
+#include <complex>
+#include <cstdlib>
+#include <string>
+#include <algorithm>
+#include <cassert>
+#include <queue>
+#include <cctype>
+using namespace std;
+
+typedef long double Real;
+
+const Real o = 1e-8;
+const Real pi = acos(-1.0);
+const int n = 26;
+
+int T, I;
+int f[n];
+string a;
+
+void input() {
+  getline(cin, a);
+}
+
+void solve() {
+  memset(f, 0, sizeof f);
+  for (size_t i = 0; i < a.length(); ++i) {
+    int order = -1;
+    if (isupper(a[i]))
+      order = a[i] - 'A';
+    else if (islower(a[i]))
+      order = a[i] - 'a';
+    if (order >= 0)
+      ++f[order];
+  }
+  sort(f, f + n);
+}
+
+void output() {
+  unsigned long long score = 0;
+  for (int i = 0; i < n; ++i)
+    score += f[i] * (i + 1);
+  cout << "Case #" << I + 1 << ": " << score << "\n";
+}
+
+int main() {
+  string line;
+  cin >> T; getline(cin, line);
+  for (I = 0; I < T; ++I) {
+    input();
+    solve();
+    output();
+  }
+	return 0;
+}
+

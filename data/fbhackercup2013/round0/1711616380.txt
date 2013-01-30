@@ -1,0 +1,76 @@
+#include <cstdio>
+#include <cctype>
+#include <algorithm>
+using namespace std;
+
+const int M = 'z' - 'a' + 1;
+
+char num[M];
+
+int make_counter = 0;
+void make() {
+    ++make_counter;
+
+    char* line;
+    size_t len, zero = 0;
+
+    len = getline(&line, &zero, stdin);
+
+    int a = 0, b = 0;
+    
+    char *it = line, c;
+    while ((c = *it) != NULL) {
+        if ((c == '(') || (c == ')')) {
+            bool face = false;
+            if ((it != line) && (*(it-1) == ':')) {
+                face = true;
+            }
+
+            if (face == false) {
+                if (c == '(') {
+                    ++a;
+                    ++b;
+                } else {
+                    --a;
+                    --b;
+                    if (a < 0) a = 0;
+                    if (b < 0) {
+                        printf("Case #%d: NO\n", make_counter);
+                        free(line);
+                        return;
+                    }
+                }
+            } else {
+                if (c == '(') {
+                    ++b;
+                } else {
+                    --a;
+                    if (a < 0) a = 0;
+                }
+            }
+        }
+        ++it;
+    }
+
+    if (a == 0) {
+        printf("Case #%d: YES\n", make_counter);
+    } else {
+        printf("Case #%d: NO\n", make_counter);
+    } 
+    free(line);
+    return;
+}
+
+int main() {
+    int m; scanf("%d", &m);
+    
+    char* line;
+    size_t len, zero = 0;
+    len = getline(&line, &zero, stdin);
+    free(line);
+    
+    while(m--) {
+        make();
+    }
+    return 0;
+}

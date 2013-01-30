@@ -1,0 +1,92 @@
+#include<iostream>
+#include<vector>
+#include<string>
+#include<cmath>
+#include<algorithm>
+#include<string.h>
+#include<cstdio>
+#include<set>
+#include<map>
+#include<ctime>
+#include<set>
+using namespace std;
+
+typedef long long Int;
+#define FOR(i,a,b) for(int i=a;i<=b;++i)
+#define sz(s) (int)(s).size()
+#define pb push_back
+#define mp make_pair
+//const int inf = 1000000000;
+//const int MOD = 1000000007;
+//#define double long double
+//const double pi = 2*acos(0.0);
+
+int cnt[450001];
+int tmp[150005];
+int fre[450000];
+
+void build(int v,int l,int r){
+	if(l==r){
+		cnt[v]=tmp[r];
+		fre[v]=(!tmp[r]);
+		return;
+	}
+	int mid = (l+r)/2;
+	build(2*v,l,mid);
+	build(2*v+1,mid+1,r);
+	cnt[v]=cnt[2*v]+cnt[2*v+1];
+	fre[v]=fre[2*v]+fre[2*v+1];
+}
+
+int getmin(int v,int l,int r){
+	if(l==r)return l;
+	int mid = (l+r)/2;
+	if(fre[2*v])return getmin(2*v,l,mid);else
+		return getmin(2*v+1,mid+1,r);
+}
+
+void upd(int v,int l,int r,int wh,int del){
+	if(l==r){
+		cnt[v]+=del;
+		fre[v]=(!cnt[v]);
+		return;
+	}
+	int mid = (l+r)/2;
+	if(wh<=mid)upd(2*v,l,mid,wh,del);else
+		upd(2*v+1,mid+1,r,wh,del);
+
+	cnt[v]=cnt[2*v]+cnt[2*v+1];
+	fre[v]=fre[2*v]+fre[2*v+1];
+}
+
+int f[1000000];
+
+int main()
+{
+	freopen("input.txt","r",stdin);freopen("output.txt","w",stdout);
+	int tests;
+	scanf("%d\n",&tests);
+	FOR(test,1,tests){
+		Int n;
+		Int k;cin>>n>>k;
+		int a,b,c,r;cin>>a>>b>>c>>r;
+		memset(tmp,0,sizeof(tmp));
+		f[0]=a;
+		FOR(i,1,k-1)f[i]=(f[i-1]*(Int)b+c)%r;
+		FOR(i,0,k-1)if(f[i]>=0 && f[i]<=100000)++tmp[f[i]];
+		build(1,0,100000);
+
+		int last = 3*k+100;
+		for(int i=k;i<=3*k+100;++i){
+			f[i]=getmin(1,0,100000);
+			upd(1,0,100000,f[i],1);
+			if(f[i-k]>=0 && f[i-k]<=100000)upd(1,0,100000,f[i-k],-1);
+		}
+
+		--n;
+		while(n-100000LL*(k+1)>last)n-=Int(k+1)*100000;
+		while(n>last)n-=k+1;
+		int ans=f[n];
+		cout<<"Case #"<<test<<": "<<ans<<endl;
+	}
+}

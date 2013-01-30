@@ -1,0 +1,97 @@
+#include <cstdio>
+#include <cstring>
+#include <assert.h>
+
+#define ll long long int
+
+using namespace std;
+
+int T, n, k, a, b, c, r, C=1, N, bi;
+int m[3000010], v[3000010];
+int conta[3000010];
+int BIT[3000010];
+
+void update(int u, int x) {
+    for (int i = u; i <= N; i += i & -i)
+        BIT[i] += x;
+}
+
+int primeirocom(int x) {
+    int b=0;
+    int r = -1;
+    for (int bm=bi;bm!=0;bm>>=1) {
+        int i=b+bm;
+        if (i>N)
+            continue;
+        if (BIT[i]<x) {
+            b=i;
+            x-=BIT[i];
+        } else if (BIT[i]==x) {
+            r=i;
+        }
+    }
+    return r;
+}
+
+int main() {
+
+    for(scanf("%d",&T);T--;) {
+        scanf("%d %d",&n,&k);
+        scanf("%d %d %d %d",&a,&b,&c,&r);
+        printf("Case #%d: ",C++);
+        N=3*k;
+        memset(conta,0,(N+3)*sizeof(int));
+        m[0] = a;
+        if (a < N) conta[a]++;
+        for (int i=1;i<k;i++) {
+            m[i] = ((ll)b * (ll)m[i-1] + (ll)c)%(ll)r;
+            if (m[i] < N) conta[m[i]]++;
+        }
+
+        memset(BIT,0,(N+3)*sizeof(int));
+        bi=1; while (N>=bi) bi<<= 1; bi>>=1;
+        for (int i=0;i<N;i++) {
+            if (conta[i]==0)
+                update(i+1,1);
+        }
+
+/*        for (int i=0;i<k;i++)
+            printf("%d ",m[i]);
+        printf("\n");*/
+
+        int ini = 0, fim = k-1;
+
+        bool foi=false;
+        for (int i=k;i<5*k;i++) {
+            int mex = primeirocom(1) - 1;
+//            printf("> %d ",mex);
+            if (i==n-1) {
+                foi = true;
+                printf("%d\n",mex);
+                break;
+            }
+            update(mex+1,-1); // ele ta la agora
+            if (mex < N) conta[mex]++;     // era 0, conta[mex]=1
+
+            fim++;
+            m[fim] = mex;   // poe em m
+
+            // tira do ini
+            int tira = m[ini];
+            ini++;
+
+            if (tira < N) conta[tira]--;
+            if (tira < N and conta[tira]==0)
+                update(tira+1,+1);
+        }
+        if (!foi) {
+            n = n-5*k-1;
+            int qq = 0;
+            for (int i=fim-k;i<=fim;i++)
+                v[qq++] = m[i];
+            printf("%d\n", v[n%qq]);
+        }
+    }
+
+    return 0;
+}

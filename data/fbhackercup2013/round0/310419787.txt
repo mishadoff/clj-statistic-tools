@@ -1,0 +1,39 @@
+#include <cstdio>
+#include <cstdlib>
+#include <cctype>
+#include <vector>
+#include <map>
+#include <algorithm>
+
+using namespace std;
+
+char s[1005];
+
+int main(void) {
+  int nt;
+  scanf ("%d\n", &nt);
+  for (int tn=1; tn <= nt; tn++) {
+    printf ("Case #%d: ", tn);
+    gets (s);
+
+    map <int, int> cnt;
+    for (int i = 0; s[i]; i++)
+      if (isalpha(s[i]))
+        cnt[toupper(s[i])]++;
+
+    vector <int> v;
+    for (map <int, int>::iterator p = cnt.begin(); p != cnt.end(); ++p) {
+      v.push_back(p->second);
+    }
+    sort (v.begin(), v.end());
+    reverse (v.begin(), v.end());
+
+    int mul = 26, res = 0;
+    for (int i = 0; i < (int)v.size(); i++) 
+      res += (mul--) * v[i];
+
+    printf ("%d\n", res);
+  }
+
+  return 0;
+}

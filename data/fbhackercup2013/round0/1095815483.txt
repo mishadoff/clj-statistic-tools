@@ -1,0 +1,39 @@
+#include<cstdio>
+#include<algorithm>
+#include<cstring>
+using namespace std;
+
+int n,k;
+char str[500];
+int ck[500][500];
+int A[500];
+
+int calc(int st,int fn)
+{
+	if( ck[st][fn] != -1 ) return ck[st][fn];
+	ck[st][fn] = 0;
+	if( st > fn ) ck[st][fn] = 1;
+	if( st <= fn and str[st] != '(' and str[st] != ')' ) ck[st][fn] = max( ck[st][fn] , calc( st+1 , fn ) );
+	if( st < fn and str[st] == '(' and str[fn] == ')' ) ck[st][fn] = max( ck[st][fn] , calc( st+1 , fn-1 ) );
+	if( st < fn and str[st] == ':' and str[st+1] == '(' ) ck[st][fn] = max( ck[st][fn] , calc( st+2 , fn ) );
+	if( st < fn and str[st] == ':' and str[st+1] == ')' ) ck[st][fn] = max( ck[st][fn] , calc( st+2 , fn ) );
+	for(int c=st;c<fn;c++) ck[st][fn] = max( ck[st][fn] , min( calc( st , c ) , calc( c+1 , fn ) ) );
+	return ck[st][fn];
+}
+
+int main()
+{
+	freopen("input.txt","r",stdin);
+	freopen("output.txt","w",stdout);
+	scanf("%d",&n);
+	gets( str );
+	for(int c=1;c<=n;c++)
+	{
+		gets( str );
+		k = strlen( str );
+		for(int d=0;d<500;d++) for(int e=0;e<500;e++) ck[d][e] = -1;
+		calc( 0 , k-1 );
+		if( ck[0][k-1] == 1 ) printf("Case #%d: YES\n",c);
+		else printf("Case #%d: NO\n",c);
+	}
+}

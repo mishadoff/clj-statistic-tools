@@ -1,0 +1,73 @@
+import java.util.*;
+
+public class Bal {
+  public static void main(String[] args) {
+    Scanner in = new Scanner(System.in);
+    int t = in.nextInt();
+    in.nextLine();
+    for (int caseNum = 1; caseNum <= t; ++caseNum) {
+      String line = in.nextLine();
+      String out = "";
+      if (isBalanced(line)) {
+        out = "YES";
+      } else {
+        out = "NO";
+      }
+      System.out.printf("Case #%d: %s\n", caseNum, out);
+    }
+  }
+  
+  public static boolean isBalanced(String lline) {
+    int len = lline.length();
+    char[] line = lline.toCharArray();
+    boolean[][] balancer = new boolean[len][len];
+    // balancer[i][j] = "is the substring from index i to index j, inclusive, balanced?"
+    // initialize balancer
+    for (int i = 0; i < line.length; ++i) {
+      char c = line[i];
+      if ( ('a' <= c && c <= 'z') || c == ' ' || c == ':') {
+        balancer[i][i] = true;
+      }
+    }
+    for (int dist = 1; dist < len; ++dist) {
+      for (int start = 0; start < len - dist; ++start) {
+        int end = start + dist; // inclusive.
+        // this substring is balanced if any of the following are true:
+        // 1. it can be broken into two parts that are already balanced
+        // 2. start is an open paren, end is a closed paren
+        // 3. the string is :( + balanced, or :) + balanced or balanced + :( or balanced + :)
+        boolean balanced = false;
+        for (int check = start; check < end; ++check) {
+          balanced |= (balancer[start][check] && balancer[check+1][end]);
+        }
+        
+        if (line[start] == '(' && line[end] == ')') {
+          if (start+1 <= end-1) {
+            balanced |= balancer[start+1][end-1];
+          } else {
+            balanced = true; // empty string
+          }
+        }
+        
+        // lastly, we check for smilies.  at least there are only 4 combos, so I don't care about being smart about it right now.
+        if (line[start] == ':' && (line[start+1] == '(' || line[start+1] == ')')) {
+          if (start + 2 <= end) {
+            balanced |= balancer[start+2][end];
+          } else {
+            balanced = true; // empty string
+          }
+        }
+        if ( (line[end] == '(' || line[end] == ')') && line[end-1] == ':') {
+          if (start <= end-2) {
+            balanced |= balancer[start][end-2];
+          } else {
+            balanced = true; // empty string
+          }
+        }
+        
+        balancer[start][end] = balanced;
+      }
+    }
+    return balancer[0][len-1];
+  }
+}

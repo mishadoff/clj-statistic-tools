@@ -1,0 +1,58 @@
+#include <vector>
+#include <list>
+#include <map>
+#include <set>
+#include <deque>
+#include <stack>
+#include <bitset>
+#include <algorithm>
+#include <functional>
+#include <iostream>
+#include <iomanip>
+#include <cstdio>
+#include <cmath>
+using namespace std;
+
+int converttoint(string S) {
+    int ret=0;
+    for(int i=0;i<S.size();i++)
+        ret=ret*10+S[i]-'0';
+    return ret;
+}
+
+int getid(char c) {
+    if(c>='a' && c<='z')
+        return c-'a';
+    if(c>='A' && c<='Z')
+        return c-'A';
+    return -1;
+}
+
+vector<int> getcounts(const string& X) {
+    vector<int> A(26,0);
+    for(int i=0;i<X.size();i++) {
+        int id = getid(X[i]);
+        if(id==-1)
+            continue;
+        A[id]++;
+    }
+    sort(A.begin(), A.end(), greater<int>());
+    return A;
+}
+
+int main() {
+    string Ts;
+    getline(cin,Ts);
+    int T=converttoint(Ts);
+    for(int t=1;t<=T;t++) {
+        string curr;
+        getline(cin, curr);
+        vector<int> counts = getcounts(curr);
+        int answer = 0;
+        for(int i=0;i<counts.size();i++) {
+            answer += (26-i)*counts[i];
+        }
+        printf("Case #%d: %d\n", t, answer);
+
+    }
+}

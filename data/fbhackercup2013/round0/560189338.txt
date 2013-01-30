@@ -1,0 +1,33 @@
+#include <string>
+#include <iostream>
+#include <cstring>
+#include <cstdio>
+#include <algorithm>
+
+using namespace std;
+
+int main(void)
+{
+	int t;
+	cin >> t;
+	string inp;
+	getline(cin, inp);
+	for(int caseN=1;caseN<=t;caseN++)
+	{
+		getline(cin, inp);
+		int cnt[26] = {0, };
+		for(int i=0;i<inp.size();i++) 
+		{
+			inp[i] = tolower(inp[i]);
+			if(isalpha(inp[i])) cnt[inp[i] - 'a']++;
+		}
+
+		sort(cnt, cnt + 26);
+		int ans = 0;
+		for(int i=0;i<26;i++) ans += (i + 1) * cnt[i];
+		printf("Case #%d: %d\n", caseN, ans);
+	}
+
+	return 0;
+}
+

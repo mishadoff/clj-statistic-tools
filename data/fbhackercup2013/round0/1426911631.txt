@@ -1,0 +1,91 @@
+#include <stdio.h>
+#include <sstream>
+#include <algorithm>
+#include <iostream>
+using namespace std;
+//{{{Commonly used macro in topcoder
+//-----------------------By cylixstar-----------------------//
+#define REP(i, n) for (int n_##__LINE__= (n), i = 0; i < n_##__LINE__; ++i)
+#define FOR(i, f, t) for (__typeof__(f) f_##__LINE__=(f), t_##__LINE__=(t), i = f_##__LINE__; i <= t_##__LINE__; ++i)
+#define TR(c, it) for (__typeof__((c).begin()) it = (c).begin(); it != (c).end(); ++it)
+#define ALL(c) (c).begin(), (c).end()
+#define SZ(a) ((int)(a).size())
+#define CLR(a, v) do { memset(a, v, sizeof(a)); } while(0)
+#define DBG(a) do { std::cout << "[" << __FUNCTION__ << "]" << #a << ": " << a << endl; } while(0)
+
+template<typename T>
+inline void checkMax(T& a, const T& b) {
+  if (a < b) a = b;
+}
+
+template<typename T>
+inline void checkMin(T& a, const T& b) {
+  if (a > b) a = b;
+}
+
+template<typename T>
+T string2int(const string& s) {
+  T ret;
+  istringstream ins(s);
+  ins >> ret;
+  return ret;
+}
+
+template<typename T>
+string int2string(T val) {
+  ostringstream os;
+  os << val;
+  return os.str();
+}
+
+//}}}
+
+const int kMaxKnown = 100000;
+typedef long long int64;
+
+int a,b,c,r;
+int n, k;
+int m[kMaxKnown];
+int appear[kMaxKnown + 1];
+int F[kMaxKnown + 1], number[kMaxKnown + 1];
+
+int get_root(int x) {
+  return F[x] == x ? x : F[x] = get_root(F[x]);
+}
+
+void put(int x, int pos) {
+  int final_pos = get_root(pos);
+  number[final_pos] = x;
+  F[final_pos] = get_root(F[(final_pos + 1) % (k + 1)]);
+}
+
+int main() {
+  int tc;
+  scanf("%d", &tc);
+  for (int case_num = 1; case_num <= tc; ++case_num) {
+    scanf("%d%d", &n, &k);
+    scanf("%d%d%d%d", &a, &b, &c, &r);
+    m[0] = a;
+    FOR (i, 1, k - 1) {
+      m[i] = (b * (int64)m[i - 1] + c) % r;
+    }
+    fill(appear, appear + k + 1, -1);
+    REP (i, k) {
+      if (m[i] >= 0 && m[i] <= k) appear[m[i]] = i;
+    }
+    REP (i, k + 1) F[i] = i;
+    REP (i, k + 1) {
+      if (appear[i] >= 0) {
+        put(i, appear[i]);
+      } else {
+        put(i, k);
+      }
+    }
+    /*REP(i, k + 1) {
+      printf("%d ", number[i]);
+    }
+    printf("\n");*/
+    printf("Case #%d: %d\n", case_num, number[(n - 1) % (k + 1)]);
+  }
+  return 0;
+}

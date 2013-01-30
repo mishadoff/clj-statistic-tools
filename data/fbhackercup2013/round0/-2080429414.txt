@@ -1,0 +1,79 @@
+#include<sys/types.h>
+#include<dirent.h>
+
+#include<algorithm>
+#include<iostream>
+#include<string>
+#include<vector>
+#include<cstdio>
+#include<cstdlib>
+#include<sstream>
+#include<cmath>
+#include<fstream>
+#include<map>
+#include<set>
+#include<cassert>
+
+#define MAX(x, y) ((x) > (y) ? (x) : (y))
+#define MIN(x, y) ((x) < (y) ? (x) : (y))
+#define ABS(x) ((x) > 0 ? (x) : -(x))
+#define lt(x, y)	((x) >= 0 && ((x) < (y) || (y) < 0))
+
+#define SWAP(x, y) {(x) += (y); (y) = (x) - (y); (x) -= (y);}
+
+#define EPS 1e-6
+#define PI 3.14159265358979323846
+
+using namespace std;
+
+int ncase;
+string str;
+
+bool Ans(string str){
+
+	int L = 0;
+	int U = 0;
+
+	for(unsigned i = 0; i < str.size(); i++){
+
+		if(str[i] == '(')
+		{
+			U++;
+			if(!i || str[i - 1] - ':')
+				L++;
+
+		}
+		if(str[i] == ')')
+		{
+			L--;
+			L = MAX(0, L);
+
+			if(!i || str[i - 1] - ':')
+				U--;
+		}
+
+		if(U < 0)	return false;
+
+		assert(U >= L);
+	}
+
+	return L == 0;
+
+}
+
+int main()
+{
+	getline(cin, str);
+	ncase = atoi(str.c_str());
+
+	for(int idx = 1; idx <= ncase; idx++){
+
+		getline(cin, str);
+
+		printf("Case #%d: %s\n", idx, Ans(str) ? "YES" : "NO");
+	}
+	
+	return 0;
+}
+
+// vi: ts=2 sw=2

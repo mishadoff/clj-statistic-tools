@@ -1,0 +1,41 @@
+import sys
+
+def match(text, level=0):
+    if len(text) == 0:
+        if level == 0:
+            return True
+        return False
+
+    if text[0] == " " or 'a' <= text[0] <= 'z':
+        return match(text[1:], level)
+
+    elif len(text) > 1 and text[0] == ":" and text[1] == "(":
+        return match(text[2:], level) or match(text[2:], level + 1)
+
+    elif len(text) > 1 and text[0] == ":" and text[1] == ")":
+        if level > 0:
+            return match(text[2:], level) or match(text[2:], level - 1)
+        else:
+            return match(text[2:], level)
+
+    elif text[0] == ":":
+        return match(text[1:], level)
+
+    elif text[0] == "(":
+        return match(text[1:], level + 1)
+
+    elif text[0] == ")":
+        if level > 0:
+            return match(text[1:], level - 1)
+        else:
+            return False
+
+    return False
+
+sys.stdin.readline()
+casenum = 1
+
+for line in sys.stdin:
+    l = line.strip()
+    print "Case #%d: %s" % (casenum, "YES" if match(l) else "NO")
+    casenum += 1

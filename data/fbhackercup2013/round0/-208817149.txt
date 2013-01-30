@@ -1,0 +1,63 @@
+#include <algorithm>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
+#include <utility>
+
+using namespace std;
+
+const int MAXL = 505;
+
+char input[MAXL];
+int N, freq[33];
+
+int nextInt() {
+	int ans = 0;
+	while (true) {
+		char c = getchar();
+		if (c == '\n') {
+			break;
+		}
+		ans = ans * 10 + (c - '0');
+	}
+	return ans;
+}
+
+void nextLine() {
+	int pos = 0;
+	while (true) {
+		char c = getchar();
+		if (c == '\n') {
+			break;
+		}
+		input[pos++] = c;
+	}
+	input[pos] = 0;
+}
+
+int main()
+{
+	N = nextInt();
+	for (int i = 1; i <= N; i++) {
+		nextLine();
+		for (int j = 0; j < 26; j++) {
+			freq[j] = 0;
+		}
+		for (int j = 0; input[j] != 0; j++) {
+			if (input[j] >= 'A' && input[j] <= 'Z') {
+				freq[input[j] - 'A']++;
+			} else if (input[j] >= 'a' && input[j] <= 'z') {
+				freq[input[j] - 'a']++;
+			}
+		}
+		sort(freq, freq + 26);
+		int answer = 0;
+		for (int j = 26; j >= 1; j--) {
+			answer += freq[j - 1] * j;
+		}
+		printf("Case #%d: %d\n", i, answer);
+	}
+
+	return 0;
+}

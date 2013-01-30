@@ -1,0 +1,41 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string>
+#include <stack>
+#include <queue>
+#include <map>
+#include <set>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cmath>
+#include <climits>
+#define LL long long
+const double pi=acos(-1.0);
+using namespace std;
+
+priority_queue <int,vector<int>,greater<int> > heap;
+map <int,int> flag;
+LL a[210000],b,c,r;
+int N,M,i,ti,k;
+
+int main(){
+    cin >> ti;
+    for (k=1;k<=ti;k++){
+        while (!heap.empty()) heap.pop();
+        flag.clear();
+        cin >> N >> M >> a[0] >> b >> c >> r;
+        for (i=1;i<M;i++) a[i]=(b*a[i-1]+c)%r;
+        for (i=0;i<M;i++) ++flag[a[i]];
+        for (i=0;i<=M;i++)
+            if (!flag[i]) heap.push(i); 
+        for (i=M;i<=M*2;i++){
+            a[i]=heap.top(); heap.pop(); ++flag[a[i]];
+            --flag[a[i-M]];
+            if (!flag[a[i-M]]) heap.push(a[i-M]);
+        }
+        printf("Case #%d: ",k);
+        cout << a[(((N-1)-(M-1)-1+M+1))%(M+1)+1+M-1] << endl;
+    }
+}

@@ -1,0 +1,42 @@
+#include <iostream>
+#include <string>
+#include <map>
+#include <vector>
+#include <algorithm>
+#include <queue>
+using namespace std;
+
+typedef long long i64;
+
+int cnt[200000];
+
+int main(void) {
+	int m;
+	cin >> m;
+	for(int ts=1; ts<=m; ts++) {
+		i64 n,k,a,b,c,r;
+		cin >> n >> k >> a >> b >> c >> r;
+		cout << "Case #" << ts << ": ";
+		deque<i64> init(1,a);
+		memset(cnt,0,sizeof(cnt));
+		for(int i=1; i<k; i++) init.push_back((init.back()*b+c)%r);
+		for(int i=0; i<k; i++) if(init[i]<200000) cnt[init[i]]++;
+		priority_queue<int> q;
+		for(int i=0; i<200000; i++) if(cnt[i]==0) q.push(-i);
+		//for(int i=0; i<k; i++) cout << init[i] << " "; cout << endl;
+		while(n>3*(k+1)) n-=k+1;
+		for(int i=k; i<n; i++) {
+			int j=-q.top();
+			q.pop();
+			//cout << j << " " << init.front() << endl;
+			init.push_back(j);
+			cnt[j]++;
+			if(init.front()<200000) {
+				cnt[init.front()]--;
+				if(cnt[init.front()]==0) q.push(-init.front());
+			}
+			init.pop_front();
+		}
+		cout << init.back() << endl;
+	}
+}

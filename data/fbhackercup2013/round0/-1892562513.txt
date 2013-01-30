@@ -1,0 +1,31 @@
+from heapq import heappush, heappop
+from collections import Counter
+
+if __name__ == '__main__':
+    N = int(input())
+    for t in range(N):
+        n, k = map(int, input().split())
+        a, b, c, r = map(int, input().split())
+        m = [a]
+        tas = []
+        q = Counter(m)
+        for i in range(k - 1):
+            m.append((b * m[i] + c) % r)
+            if m[-1] < k:
+                q[m[-1]] += 1
+        # print(q)
+        for i in range(k + 1):
+            if q[i] == 0:
+                heappush(tas, i)
+        l = []
+        candidat = 0
+        for i in range(k):
+            candidat = heappop(tas)
+            l.append(candidat)
+            q[m[i]] -= 1
+            if q[m[i]] == 0:
+                heappush(tas, m[i])
+            m[i] = candidat
+        l.append(heappop(tas))
+        # print(l)
+        print('Case #{}: {}'.format(t + 1, l[(n - 1 - k) % (k + 1)]))

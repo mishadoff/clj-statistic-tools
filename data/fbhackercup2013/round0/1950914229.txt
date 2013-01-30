@@ -1,0 +1,58 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+const int kMaxK = 100005;
+int t, n, k, a, b, c, r;
+std::vector<int> firstk, cycle;
+int count[kMaxK];
+
+inline void FindNext(int &next) {
+  for (; next <= k && count[next] > 0; ++next);
+}
+
+void solve() {
+  std::cin >> t;
+  for (int rept = 0; rept < t; ++rept) {
+    std::cin >> n >> k;
+    std::cin >> a >> b >> c >> r;
+    firstk.clear();
+    cycle.clear();
+    memset(count ,0, sizeof(count));
+    for (long long i = 0, num = a; i < k; ++i, num = (num * b + c) % r) {
+      firstk.push_back(num);
+      if (num <= k) { ++count[num]; }
+    }
+    /*for (int i = 0; i < (int)firstk.size(); ++i) {
+      std::cout << firstk[i] << " ";
+    }
+    std::cout << std::endl;*/
+
+    int next = 0;
+    FindNext(next);
+    cycle.push_back(next++);
+    FindNext(next);
+    //std::cout << cycle.back() << " ";
+    for (int i = 0; i < (int)firstk.size(); ++i) {
+      if (firstk[i] <= k) {
+        --count[firstk[i]];
+      }
+      if (firstk[i] < next && count[firstk[i]] == 0) {
+        cycle.push_back(firstk[i]);
+        //std::cout << cycle.back() << " ";
+      } else {
+        cycle.push_back(next++);
+        FindNext(next);
+        //std::cout << cycle.back() << " ";
+      }
+    }
+    //std::cout << std::endl;
+    std::cout << "Case #" << rept + 1 << ": " << cycle[(n - (k + 1)) % (k + 1)] << '\n';
+  }
+}
+
+int main(int argc, char *argv[])
+{
+  solve();
+  return 0;
+}

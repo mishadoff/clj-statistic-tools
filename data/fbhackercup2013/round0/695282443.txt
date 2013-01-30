@@ -1,0 +1,64 @@
+#include<iostream>
+#include<cstdio>
+#include<cstdlib>
+#include<memory.h>
+#include<cmath>
+#include<ctime>
+#include<algorithm>
+#include<string>
+#include<map>
+#include<set>
+#define abs(x) ((x)<0?-(x):(x))
+#define min(a,b) ((a)<(b)?(a):(b))
+#define max(a,b) ((a)>(b)?(a):(b))
+#define sqr(x) ((x)*(x))
+#define getar(m,n) for(int _=0;_<n;++_) cin>>(m)[_];
+#define foreach(it,c) for(typeof((c).begin()) it=(c).begin(); it!=(c).end(); it++)
+#define fill(m,v) memset(m,v,sizeof(m))
+#define random(x) (((rand()<<15)+rand())%(x))
+#define y1 stupid_cmath
+#define y0 stupid_cmath_make_me_cry
+#define tm stupid_ctime
+#define long long long
+using namespace std;
+
+int n,m;
+int i,j,k,l;
+char s[111];
+int _can[111][111];
+bool can(int l, int r){
+	if(i>j) return true;
+	int &res=_can[l][r];
+	if(res==-1){
+		res=false;
+		int i=l,j=r;
+		while(i<=j && (s[i]!='(' && s[i]!=')')) ++i;
+		while(i<=j && (s[j]!='(' && s[j]!=')')) --j;
+		if(i>j) res=true; else{
+			if(s[i]=='(' && i>l && s[i-1]==':') res|=can(i+1,j);
+			if(s[i]==')' && i>l && s[i-1]==':') res|=can(i+1,j);
+			if(s[j]==')' && j>l && s[j-1]==':') res|=can(i,j-2);
+			if(s[j]=='(' && j>l && s[j-1]==':') res|=can(i,j-2);
+			if(s[i]=='(' && s[j]==')'){
+				for(int m=i;m<=j;++m) if(s[m]==')') res|=can(i+1,m-1)&can(m+1,j);
+			}
+		}
+	}
+	return res;
+}
+
+int main(){
+	freopen("input.txt","r",stdin); freopen("output.txt","w",stdout);
+	
+	scanf("%d",&m);
+	gets(s);
+	for(k=1;k<=m;++k){
+		gets(s);
+		n=strlen(s);
+		fill(_can,-1);
+		
+		printf("Case #%d: %s\n",k,can(0,n-1) ? "YES":"NO");
+	}
+	
+	return 0;
+}

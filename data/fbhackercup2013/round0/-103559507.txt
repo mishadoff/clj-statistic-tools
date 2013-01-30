@@ -1,0 +1,46 @@
+import java.util.Arrays;
+import java.util.Scanner;
+
+
+public class Smile {
+	static int[][] memo;
+	static char[] in;
+	static int N;
+	public static void main(String[] args){
+		Scanner reader = new Scanner(System.in);
+		int T = reader.nextInt();
+		reader.nextLine();
+		for(int t = 1; t <= T; t++){
+			in = reader.nextLine().toLowerCase().toCharArray();
+			int n = in.length; N = n;
+			
+			//perform verification
+			boolean good = true;
+			for(int i = 0; i < n; i++)
+				good &= in[i] == ' ' || in[i] == ':' || in[i] == ')' || in[i] == '(' || Character.isAlphabetic(in[i]);
+			
+			memo = new int[n+1][n+1];
+			for(int[] m:memo)Arrays.fill(m,-1);
+			
+			good &= f(0,0) == 1;
+			System.out.println("Case #"+t+": "+(good?"YES":"NO"));
+		}
+	}
+	
+	public static int f(int n, int m){
+		if(memo[n][m] == -1){
+			if(n == N){
+				memo[n][m] = m==0?1:0;
+			}else if(in[n] == ')' && m == 0){
+				memo[n][m] = 0;
+			}else if(n < N-1 && in[n] == ':' && (in[n+1] == '(' || in[n+1] == ')')){
+				memo[n][m] = Math.max(f(n+2,m),f(n+1,m));
+			}else if(in[n] != '(' && in[n] != ')'){
+				memo[n][m] = f(n+1,m);
+			}else{
+				memo[n][m] = f(n+1,m + (in[n]==')'?-1:1));
+			}
+		}
+		return memo[n][m];
+	}
+}

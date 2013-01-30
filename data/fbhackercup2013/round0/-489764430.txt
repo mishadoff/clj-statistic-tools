@@ -1,0 +1,68 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <vector>
+#include <sstream>
+
+using namespace std;
+typedef long long LL;
+
+vector<LL> read_nums(istream& is){
+    string str;
+    getline(is, str);
+    stringstream ss(str);
+    vector<LL> res;
+    while(!ss.eof()){
+        LL n;
+        ss >> n;
+        res.push_back(n);
+    }
+    return res;
+}
+
+string solve(const string& str){
+    int max_opening = 0;
+    int min_opening = 0;
+    char prev = 'x';
+    for(size_t i = 0; i < str.size(); i++){
+        char c = str[i];
+        if(c == '('){
+            if(prev == ':'){
+                max_opening++;
+            }else{
+                max_opening++;
+                min_opening++;
+            }
+        }else if(c == ')'){
+            if(prev == ':'){
+                if(min_opening > 0) min_opening--;
+            }else{
+                max_opening--;
+                if(max_opening < 0) return "NO";
+                if(min_opening > 0) min_opening--;
+            }
+        }else{
+            if(c != ':' && c != ' ' && (c < 'a' && 'z' < c)) return "NO";
+        }
+        prev = c;
+    }
+    if(min_opening <= 0){
+        return "YES";
+    }else{
+        return "NO";
+    }
+}
+
+
+int main(){
+    vector<LL> nums = read_nums(cin);
+    int N = nums[0];
+    for(int n = 1; n <= N; n++){
+        string str;
+        getline(cin, str);
+        string res = solve(str);
+        cout << "Case #" << n << ": " << res << endl;
+    }
+    return 0;
+}
+

@@ -1,0 +1,36 @@
+#include <iostream>
+using namespace std;
+char input[1000];
+int balanced[100][101];
+bool get(int start, int end) {
+    int &ret = balanced[start][end];
+    if (ret!=-1) return ret;
+    
+    if (start==end) return ret=1;
+    
+    if (start+1<end && input[start]==':' && (input[start+1]=='(' || input[start+1]==')') && get(start+2,end)) return ret=1;
+    
+    if (input[start]>='a' && input[start]<='z' || input[start]==' ' || input[start]==':') return ret=get(start+1,end);
+    
+    if (input[start]==')') return ret=0;
+    
+    if (input[start]!='(') return ret=0;
+    
+    for (int i=start+1; i<end; i++) if (input[i]==')' && get(start+1,i) && get(i+1,end)) return ret=1;
+    
+    return ret=0;
+}
+int main() {
+    freopen("balanced.in","r",stdin);
+    freopen("balanced.out","w",stdout);
+    int tt = 1;
+    gets(input); int T = atoi(input); while (T--) {
+        printf("Case #%d: ",tt++);
+        gets(input);
+
+        int N = strlen(input);
+
+        memset(balanced,-1,100*101*sizeof(int));        
+        printf("%s\n",get(0,N)?"YES":"NO");
+    }
+}

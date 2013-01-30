@@ -1,0 +1,37 @@
+#include <cstdio>
+#include <cstring>
+#include <algorithm>
+
+using namespace std;
+
+int T, C=1, v[26];
+char s[1024];
+
+bool letra(char a) {
+    return ('a' <= a and a <= 'z') or
+           ('A' <= a and a <= 'Z');
+}
+
+char lower(char a) {
+    if ('a' <= a and a <= 'z') return a;
+    return a-'A'+'a';
+}
+
+int main() {
+
+    for(scanf("%d\n",&T);T--;) {
+        fgets(s,1024,stdin);
+        memset(v,0,sizeof(v));
+        for (int i=0;s[i];i++) if (letra(s[i]))
+            v[ lower(s[i])-'a' ]++;
+        sort(v,v+26);
+        int tot = 0;
+        int t = 26;
+        for (int i=25;i>=0;i--) {
+            tot += v[i]*t;
+            t--;
+        }
+        printf("Case #%d: %d\n",C++,tot);
+    }
+
+}

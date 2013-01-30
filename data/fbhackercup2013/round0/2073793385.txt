@@ -1,0 +1,77 @@
+import heapq
+
+def solve2(l1, l2):
+  n, k = (int(i) for i in l1.split(' '))
+  a, b, c, r = (int(i) for i in l2.split(' '))
+
+  m = [a] * k
+  for i in xrange(1, k):
+    m[i] = (b * m[i-1] + c) % r
+
+  d = {}
+  h = set(xrange(k+1))
+  for v in (v for v in m if v <= k):
+    if v in h:
+      h.remove(v)
+    d[v] = d.get(v, 0) + 1
+  h = list(h)
+  heapq.heapify(h)
+
+  i = -1
+  for _ in xrange(k, n):
+    i = (i + 1) % k
+    old = m[i]
+    new = heapq.heappop(h)
+    d[new] = 1
+    m[i] = new
+    if old <= k:
+      v = d[old] - 1
+      if v == 0:
+        del d[old]
+        heapq.heappush(h, old)
+      else:
+        d[old] = v
+  return m[i]
+
+def solve(l1, l2):
+  n, k = (int(i) for i in l1.split(' '))
+  a, b, c, r = (int(i) for i in l2.split(' '))
+
+  m = [a] * k
+  for i in xrange(1, k):
+    m[i] = (b * m[i-1] + c) % r
+
+  d = {}
+  h = set(xrange(k+1))
+  for v in (v for v in m if v <= k):
+    if v in h:
+      h.remove(v)
+    d[v] = d.get(v, 0) + 1
+  h = list(h)
+  heapq.heapify(h)
+
+  for i in xrange(k):
+    old = m[i]
+    m[i] = heapq.heappop(h)
+    d[m[i]] = 1
+    if old <= k:
+      v = d[old] - 1
+      if v == 0:
+        del d[old]
+        heapq.heappush(h, old)
+      else:
+        d[old] = v
+  m.append(heapq.heappop(h))
+  return m[(n - k - 1) % (k + 1)]
+
+
+FILE = "input.txt"
+OUTPUT = "output.txt"
+with open(FILE, 'r') as fr:
+  with open(OUTPUT, 'w') as fw:
+    m = int(fr.readline())
+    for i in xrange(1, m + 1):
+      l1 = fr.readline().rstrip('\n')
+      l2 = fr.readline().rstrip('\n')
+      r = solve(l1, l2)
+      fw.write("Case #" + str(i) + ": " + str(r) + "\n")

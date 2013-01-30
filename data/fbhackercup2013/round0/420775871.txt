@@ -1,0 +1,60 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+#define MAX_S 100
+
+enum {
+  NO = 0,
+  UNKNOWN = 1,
+  YES = 2,
+};
+
+char buffer[MAX_S+100];
+char cache[MAX_S+1][MAX_S+1];
+
+int check_uncached(int i, int j) {
+  int k, n = j - i;
+  if (n == 0)
+    return YES;
+  if (n == 1) {
+    int c = buffer[i];
+    return (islower(c) || c == ' ' || c == ':') ? YES : NO;
+  }
+  if (n == 2) {
+    if (buffer[i] == ':' &&
+        (buffer[i+1] == ')' || buffer[i+1] == '(')) 
+      return YES;
+  }
+  if (buffer[i] == '(' && buffer[j-1] == ')') {
+    if (check(i+1, j-1) == YES)
+      return YES;
+  }
+  for(k = 1; k < n; k++) {
+    if (check(i, i+k) == YES && check(i+k, j) == YES)
+      return YES;
+  }
+  return NO;
+}
+
+int check(int i, int j) {
+  if (cache[i][j] == UNKNOWN)
+    cache[i][j] = check_uncached(i, j);
+  return cache[i][j];
+}
+
+int main() {
+  int i, t, n;
+  scanf("%d\n", &t);
+  for (i = 1; i <= t; i++) {
+    fgets(buffer, sizeof(buffer), stdin);
+    memset(cache, UNKNOWN, sizeof(cache));
+    n = strlen(buffer);
+    if (n > 0 && buffer[n-1] == '\n') {
+      buffer[--n] = '\0';
+    }
+    int is_balanced = check(0, n);
+    printf("Case #%d: %s\n", i, (is_balanced == YES) ? "YES" : "NO");
+  }
+  return 0;
+}

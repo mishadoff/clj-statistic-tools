@@ -1,0 +1,33 @@
+import java.util.*;
+
+public class Beauty {
+  public static void main(String[] args) {
+    Scanner in = new Scanner(System.in);
+    int t = in.nextInt();
+    in.nextLine();
+    for (int caseNum = 1; caseNum <= t; ++caseNum) {
+      String line = in.nextLine();
+      System.out.printf("Case #%d: %d\n", caseNum, beauty(line));
+    }
+  }
+  
+  public static int beauty(String line) {
+    line = line.toLowerCase();
+    int[] counts = new int[26];
+    for (int i = 0; i < line.length(); ++i) {
+      char c = line.charAt(i);
+      c -= 'a';
+      if (c < 26) {
+        ++counts[c];
+      }
+    }
+    Arrays.sort(counts);
+    int total = 0;
+    int multiplier = 26;
+    for (int i = 25; i >= 0; --i) {
+      total += multiplier * counts[i];
+      --multiplier;
+    }
+    return total;
+  }
+}

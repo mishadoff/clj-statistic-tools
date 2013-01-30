@@ -1,0 +1,75 @@
+#include <string>
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int main(void)
+{
+	int T;
+	cin >> T;
+	string inp;
+	getline(cin, inp);
+	for(int caseN=1;caseN<=T;caseN++)
+	{
+		getline(cin, inp);
+		bool isAble;
+
+		vector <int> closeEmo;
+		for(int i=0;i<(int)inp.size() - 1;i++)
+		{
+			if(inp[i] == ':' && inp[i + 1] == ')')
+			{
+				closeEmo.push_back(i);
+				inp[i] = inp[i + 1] = ' ';
+			}
+		}
+
+		while(1)
+		{
+			int stat = 0;
+			int openEmo = 0;
+
+			isAble = true;
+
+			for(int i=0;i<inp.size();i++)
+			{
+				if(inp[i] == ':')
+				{
+					if(i < (int)inp.size() - 1 && inp[i + 1] == '(') 
+					{
+						openEmo++;
+						i++;
+					}
+				}
+				else if (inp[i] == '(') stat++;
+				else if (inp[i] == ')')
+				{
+					if(stat > 0) stat--;
+					else if (openEmo > 0) openEmo--;
+					else
+					{
+						isAble = false;
+						break;
+					}
+				}
+			}
+
+			if(isAble)
+			{
+				if(stat == 0) break;
+				if(closeEmo.size() == 0) { isAble = false; break; }
+				else
+				{
+					inp[closeEmo[closeEmo.size() - 1]] = ')';
+					closeEmo.pop_back();
+				}
+			}
+			else break;
+		}
+
+		cout << "Case #" << caseN << ": " << (isAble ? "YES" : "NO") << endl;
+	}
+
+	return 0;
+}

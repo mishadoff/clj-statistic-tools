@@ -1,0 +1,86 @@
+import sys
+
+def initialWindow(a, b, c, r, k):
+    window = [0] * k
+
+    window[0] = a
+    for i in range(1, k):
+        window[i] = (b * window[i - 1] + c) % r
+
+    return window
+
+
+def doIt(a, b, c, r, k, n):
+    window = initialWindow(a, b, c, r, k)
+
+    valuesInWindow = {}
+
+    def addToWindow(num):
+        if num not in valuesInWindow:
+            valuesInWindow[num] = 0
+        valuesInWindow[num] += 1
+
+    def findValueFrom(firstValue):
+        newValue = firstValue
+        while newValue in valuesInWindow and valuesInWindow[newValue] > 0:
+            newValue += 1
+
+        return newValue
+
+    def fastAddNumber(newValue):
+        poppedValue = window.pop(0)
+        window.append(newValue)
+
+        addToWindow(newValue)
+        valuesInWindow[poppedValue] -= 1
+
+        return poppedValue
+
+    def fastTick(start):
+        newValue = findValueFrom(start)
+        poppedValue = fastAddNumber( newValue )
+
+        if valuesInWindow[poppedValue] > 0:
+            # No change in set
+            nextStart = start + 1
+        elif poppedValue < newValue:
+            # Value that left < Value that entered
+            # => Value that left should reenter
+            nextStart = poppedValue
+        else:
+            # Value that left > Value that entered
+            # => Next value should be greater than last value
+            nextStart = newValue + 1
+
+        return nextStart
+
+    # The window repeats itself every (k+1) cycles, no point in calculating
+    # beyond that. Not really sure why, though. At that point, the window is
+    # some permutation of 0..k
+
+    ticks = (n - k) % (k + 1)
+
+    for v in window:
+        addToWindow(v)
+
+    nextStart = 0
+
+    for i in xrange(ticks):
+        nextStart = fastTick(nextStart)
+
+    return window[-1]
+
+
+sys.stdin.readline()
+casenum = 1
+l1 = sys.stdin.readline()
+
+while l1 is not None and len(l1) > 0:
+    l2 = sys.stdin.readline()
+
+    (n, k) = map(int, l1.strip().split())
+    (a, b, c, r) = map(int, l2.strip().split())
+    print "Case #%d: %d" % (casenum, doIt(a, b, c, r, k, n))
+    casenum += 1
+
+    l1 = sys.stdin.readline()

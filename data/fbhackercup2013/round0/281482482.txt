@@ -1,0 +1,64 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.util.Arrays;
+
+public class ProblemB {
+	public static void main(String[] args) throws IOException {
+		BufferedReader s = new BufferedReader(new InputStreamReader(System.in));
+		PrintWriter out = new PrintWriter(System.out);
+		int m = Integer.valueOf(s.readLine());
+		for (int i = 1 ; i <= m ; i++) {
+			String line = s.readLine();
+			out.println("Case #" + i + ": " + (solve(line) ? "YES" : "NO"));
+		}
+		out.flush();
+	}
+
+	private static boolean solve(String line) {
+		cl = line.toCharArray();
+		len = line.length();
+		memo = new int[201][201];
+		return dfs(0, 0) == 1;
+	}
+	
+	static char[] cl;
+	static int len;
+	static int[][] memo;
+	
+	static int dfs(int now, int level) {
+		if (now == len) {
+			return (level == 0) ? 1 : -1;
+		}
+		if (level <= -1) {
+			return -1;
+		}
+		if (memo[now][level] != 0) {
+			return memo[now][level];
+		}
+		
+		int ret = -1;
+		if (cl[now] == '(') {
+			if (now >= 1 && cl[now-1] == ':') {
+				ret = Math.max(ret, dfs(now+1, level));
+			}
+			ret = Math.max(ret, dfs(now+1, level+1));
+		} else if (cl[now] == ')') {
+			if (now >= 1 && cl[now-1] == ':') {
+				ret = Math.max(ret, dfs(now+1, level));
+			}
+			ret = Math.max(ret, dfs(now+1, level-1));
+		} else {
+			ret = Math.max(ret, dfs(now+1, level));
+		}
+		
+		memo[now][level] = ret;
+		return ret;
+	}
+
+
+	public static void debug(Object... os){
+		System.err.println(Arrays.deepToString(os));
+	}
+}

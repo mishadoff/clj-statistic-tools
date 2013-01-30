@@ -1,0 +1,43 @@
+#include <cstdio>
+#include <cstring>
+#include <algorithm>
+#include <cmath>
+#include <cstdlib>
+#include <queue>
+#include <map>
+#include <vector>
+#include <string>
+#include <cctype>
+#include <set>
+#include <utility>
+#include <stack>
+#include <iostream>
+
+using namespace std;
+
+int n;
+typedef long long ll;
+int val[256];
+char ent[10001];
+
+int main (){
+	#ifdef INTERNO
+		freopen("in", "r", stdin);
+		freopen("out", "w", stdout);
+	#endif
+	int t;
+	scanf("%d", &t); gets(ent);
+	for(int _ = 1; _ <= t; ++_){
+		memset(val, 0, sizeof val);
+		gets(ent);
+		for(int i = 0; ent[i]; ++i){
+			int z = tolower(ent[i])-'a';
+			if(z >= 0 && z < 26) ++val[z];
+		}
+		sort(val, val+26, greater<int>());
+		int resp = 0;
+		for(int i = 0; i < 26; ++i) resp += val[i]*(26-i);
+		printf("Case #%d: %d\n", _, resp);
+	}
+	return 0;
+}

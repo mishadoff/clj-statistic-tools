@@ -1,0 +1,44 @@
+#include <cstdio>
+#include <cstring>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+#define L 500
+
+char str[L+1];
+
+int solve() {
+    int ans = 0;
+    vector<int> freq(26, 0);
+    
+    for (int i = 0; i < strlen(str); i++) {
+        char ch = str[i];
+        
+        if (ch >= 'A' && ch <= 'Z') {
+            ch += 'a' - 'A';
+        }
+        
+        if (ch >= 'a' && ch <= 'z') {
+            freq[ch - 'a'] += 1;
+        }
+    }
+    sort(freq.begin(), freq.end());
+    for (int i = 25; i >= 0; i--) {
+        ans += ((i+1) * freq[i]);
+    }
+    
+    return ans;
+}
+
+int main() {
+    int m;
+    scanf("%d", &m);
+    for (int i = 1; i <= m; i++) {
+        scanf(" %[^\n]", str);
+        printf("Case #%d: %d\n", i, solve());
+    }
+    return 0;
+}
+

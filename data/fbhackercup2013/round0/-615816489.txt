@@ -1,0 +1,45 @@
+#include <iostream>
+#include <algorithm>
+#include <map>
+using namespace std;
+
+
+map<pair<int,int> ,int> done;
+
+string S;
+int solve(int p,int c){
+	if( c < 0 ) return false;
+	if( p == S.size() ) return c == 0;
+	
+	if( done[make_pair(p,c)] ) return false;
+	else done[make_pair(p,c)] = true;
+	
+	if( p+1 < S.size() && ( (S[p] == ':' && S[p+1] == ')') || (S[p] == ':' && S[p+1] == '(') ) ){
+		if( solve(p+2,c) ) return true;
+	}
+	if( S[p] == '(' ){
+		if( solve(p+1,c+1) ) return true;
+	}else if( S[p] == ')' ){
+		if( solve(p+1,c-1) ) return true;
+	}else{
+		if( solve(p+1,c) ) return true;
+	}
+	return false;
+	
+}
+int solve(string s){
+	done.clear();
+	S = s;
+	return solve(0,0);
+}
+
+int main(){
+	int n;
+	cin >> n;
+	string s;
+	getline(cin,s);
+	for(int i = 0 ; i < n ; i++){
+		getline(cin,s);
+		cout << "Case #" << i+1 << ": " << (solve(s)?"YES":"NO") << endl;
+	}
+}

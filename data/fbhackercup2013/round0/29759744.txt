@@ -1,0 +1,90 @@
+#include <cstdio>
+#include <cstring>
+#include <algorithm>
+
+using namespace std;
+int N, K, T, TS = 0;
+int NENE;
+long long A, B, C, R;
+int tem[100024];
+int bit[100024];
+long long m[100024];
+int val[100024];
+
+/* Esta função soma, não muda */
+inline void updateBit(int y, int v){
+    int i;
+    /* Tirar os ++ se quiser começar em 1, não em 0 */
+    y++;
+    for(i = y; i <= NENE; i += i & -i)
+        bit[i] += v;
+}
+
+inline int queryBit(int y){
+    int r = 0;
+    int i;
+    y++;
+
+    for(i = y; i; i -= i & -i)
+        r += bit[i];
+
+    return r;
+}
+
+inline int mex(){
+    int lb = 0;
+    int ub = K;
+    int m, a;
+
+    while(lb != ub){
+        m = (lb + ub) >> 1;
+        a = queryBit(m);
+        if(a)
+            ub = m;
+        else
+            lb = m + 1;
+    }
+
+    return lb;
+}
+
+int main(){
+    int i, em, p;
+
+    for(scanf("%d\n", &T); T--;){
+        memset(tem, 0, sizeof(tem));
+        memset(bit, 0, sizeof(bit));
+        scanf("%d %d %lld %lld %lld %lld", &N, &K, &A, &B, &C, &R);
+        NENE = K + 4;
+        for(i = 0; i < K; i++){
+            if(A <= K){
+                tem[A]++;
+            }
+            m[i] = A;
+            A = (A * B + C) % R;
+        }
+        for(i = 0; i <= K; i++)
+            if(!tem[i])
+                updateBit(i, 1);
+
+        for(i = 0; i <= K; i++){
+            p = (i == K? 0 : i);
+            em = mex();
+            
+            if(m[p] <= K){
+                tem[m[p]]--;
+                if(!tem[m[p]]){
+                    updateBit(m[p], 1);
+                }
+            }
+
+            val[i] = em;
+            tem[em]++;
+            updateBit(em, -1);
+        }
+
+        printf("Case #%d: %d\n", ++TS, val[N % (K + 1)]);
+    }
+
+    return 0;
+}

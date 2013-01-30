@@ -1,0 +1,37 @@
+#include <ctype.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_LINE_SIZE 1000
+
+int cmp(const void *p1, const void *p2) {
+  const int *ip1 = p1;
+  const int *ip2 = p2;
+  return (*ip1) - (*ip2);
+}
+
+int main() {
+  int i, j, m, c, sum;
+  char buffer[MAX_LINE_SIZE];
+  int count[26];
+
+  scanf("%d\n", &m);
+  for (i = 1; i <= m; i++) {
+    memset(count, 0, sizeof(count));
+    fgets(buffer, sizeof(buffer), stdin);
+    for (j = 0; buffer[j] != '\0'; j++) {
+      c = buffer[j];
+      if (isupper(c))
+        count[c - 'A']++;
+      else if (islower(c))
+        count[c - 'a']++;
+    }
+    qsort(count, sizeof(count)/sizeof(count[0]), sizeof(count[0]), cmp);
+    for (sum = j = 0; j < 26; j++) {
+      sum += count[j] * (j + 1);
+    }
+    printf("Case #%d: %d\n", i, sum);
+  }
+  return 0;
+}

@@ -1,0 +1,24 @@
+import sys
+
+def check(line):
+  a = 0
+  b = 0
+  for c in line:
+    if c == '(':
+      a = a + 1
+      b = b + 1
+    elif c == ')':
+      if b == 0: return False
+      a = max(a - 1, 0)
+      b = b - 1
+    elif c == '<':
+      b = b + 1
+    else:
+      a = max(a - 1, 0)
+  return a == 0
+
+for k, line in enumerate(sys.stdin):
+  if k == 0: continue
+  line = [c for c in line.replace(':(', '<').replace(':)', '>')
+            if c in '()<>']
+  print "Case #%d:" % k, "YES" if check(line) else "NO"

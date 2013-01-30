@@ -1,0 +1,29 @@
+import java.util.*;
+public class Beautiful {
+	public static void main(String[] args) {
+		Scanner s = new Scanner(System.in);
+		int n = Integer.parseInt(s.nextLine());
+		for (int i = 0; i < n; i++) {
+			String str = s.nextLine();
+			long[] ct = new long[26];
+			for (int j = 0; j < str.length(); j++) {
+				char ch = str.charAt(j);
+				int id = -1;
+				if (ch >= 'A' && ch <= 'Z') {
+					id = ch - 'A';
+				} else if (ch >= 'a' && ch <= 'z') {
+					id = ch - 'a';
+				} else {
+					continue;
+				}
+				ct[id]++;
+			}
+			Arrays.sort(ct);
+			long ans = 0;
+			for (int j = 0; j < ct.length; j++) {
+				ans += ct[j] * (j + 1);
+			}
+			System.out.printf("Case #%d: %d\n",i+1,ans);
+		}
+	}
+}

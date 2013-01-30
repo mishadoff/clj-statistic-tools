@@ -1,0 +1,56 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <string.h>
+#include <set>
+#include <queue>
+#include <map>
+#include <stack>
+#include <fstream>
+#include <iomanip>
+#include <cstdio>
+#include <cstdlib>
+#include <assert.h>
+using namespace std;
+
+typedef long long ll;
+
+#define f first
+#define s second
+#define mk make_pair
+#define pii pair<int,int>
+
+int cnt[30];
+
+int main() {
+    freopen("Ulaz.txt","r",stdin);
+    freopen("Izlaz.txt","w",stdout);
+    int tests; scanf("%d",&tests);
+    string w;
+    getline(cin, w);
+    for (int t = 1; t <= tests; ++t) {
+        string w;
+        getline(cin, w);
+        memset(cnt, 0, sizeof(cnt));
+        for (int i = 0; i < w.size(); ++i) {
+            char c = w[i];
+            if (c >= 'A' && c <= 'Z')
+                c = 'a' + c - 'A';
+
+            if (c >= 'a' && c <= 'z')
+                cnt[c-'a'] ++;
+        }
+
+        int sol = 0;
+        sort(cnt, cnt + 30);
+        reverse(cnt, cnt + 30);
+        for (int i = 0; i < 30; ++i) {
+            int score = 26  - i;
+            if (score <= 0) break;
+            sol += score * cnt[i];
+        }
+        printf("Case #%d: %d\n",t,sol);
+    }
+    return 0;
+}

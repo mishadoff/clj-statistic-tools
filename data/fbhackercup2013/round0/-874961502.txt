@@ -1,0 +1,23 @@
+#include<stdio.h>
+#include<algorithm>
+using namespace std;
+int main(){
+    int T,cs=0,i;
+    scanf("%d",&T);
+    char s[512];
+    gets(s);
+    while(T--){
+        int d[26]={};
+        gets(s);
+        printf("Case #%d: ",++cs);
+        for(i=0;s[i];i++){
+            if(s[i]>='A'&&s[i]<='Z')d[s[i]-'A']++;
+            else if(s[i]>='a'&&s[i]<='z') d[s[i]-'a']++;
+        }
+        sort(d,d+26);
+        int an=0;
+        for(i=25;i>=0;i--)an+=d[i]*(i+1);
+        printf("%d\n",an);
+    }
+    return 0;
+}

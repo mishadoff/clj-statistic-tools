@@ -1,0 +1,82 @@
+#include <cassert>
+#include <cstdio>
+#include <ctime>
+#include <cstdlib>
+#include <climits>
+#include <cstddef>
+#include <cctype>
+#include <cmath>
+#include <cstring>
+#include <fstream>
+#include <sstream>
+#include <iostream>
+#include <iomanip>
+#include <iterator>
+#include <numeric>
+#include <algorithm>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <vector>
+#include <bitset>
+#include <list>
+#include <string>
+#include <functional>
+#include <utility>
+using namespace std;
+typedef long long llint;
+int work()
+{
+	int n, k;
+	int a, b, c, r;
+	scanf("%d%d", &n, &k);
+	scanf("%d%d%d%d", &a, &b, &c, &r);
+	vector <int> m(k);
+	m[0] = a;
+	for (int i = 1; i < k; ++i)
+	{
+		m[i] = static_cast <int>((llint(m[i - 1]) * b + c) % r);
+	}
+	vector <int> cnt(k + 1);
+	for (int i = 0; i < k; ++i)
+	{
+		if (m[i] <= k)
+		{
+			++cnt[m[i]];
+		}
+	}
+	set <int> ch;
+	for (int i = 0; i <= k; ++i)
+	{
+		if (cnt[i] == 0)
+		{
+			ch.insert(i);
+		}
+	}
+	vector <int> p(k + 1);
+	for (int i = 0; i <= k; ++i)
+	{
+		p[i] = *(ch.begin());
+		ch.erase(ch.begin());
+		if (i < k && m[i] <= k)
+		{
+			--cnt[m[i]];
+			if (cnt[m[i]] == 0)
+			{
+				ch.insert(m[i]);
+			}
+		}
+	}
+	return p[(n - k - 1) % (k + 1)];
+}
+int main()
+{
+	int tc;
+	scanf("%d", &tc);
+	for (int cc = 1; cc <= tc; ++cc)
+	{
+		printf("Case #%d: %d\n", cc, work());
+	}
+	return 0;
+}

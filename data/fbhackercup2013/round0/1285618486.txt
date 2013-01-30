@@ -1,0 +1,43 @@
+#include <iostream>
+#include <stdio.h>
+#include <algorithm>
+#include <vector>
+#include <string.h>
+#include <string>
+
+using namespace std;
+
+int v[26];
+
+int Work()
+{
+	string ss;
+	getline(cin, ss);
+	for (int i = 0; i < ss.length(); i ++)
+		if (ss[i] >= 'a' && ss[i] <= 'z')  ss[i] -= 32;
+	memset(v, 0, sizeof(v));
+	for (int i = 0; i < ss.length(); i ++)
+		if (ss[i] >= 'A' && ss[i] <= 'Z')  v[ss[i]-'A'] ++;
+	sort(v, v + 26);
+	int ans = 0;
+	for (int i = 0; i < 26; i ++)
+		ans += (i + 1) * v[i];
+	return ans;
+}
+
+int main()
+{
+	freopen("beautiful_stringstxt.txt", "r", stdin);
+	freopen("output.txt", "w", stdout);
+
+	ios::sync_with_stdio(false);
+
+	int T = 0;
+	cin >> T;
+	string ss;
+	getline(cin, ss);
+	for (int tt = 1; tt <= T; tt ++)
+		cout << "Case #" << tt << ": " << Work() << endl;
+
+	return 0;
+}

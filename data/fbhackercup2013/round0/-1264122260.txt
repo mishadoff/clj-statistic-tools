@@ -1,0 +1,52 @@
+#include <cstdlib>
+#include <cctype>
+#include <cstring>
+#include <cstdio>
+#include <cmath>
+#include <algorithm>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+using namespace std;
+
+#define For(i,n) for(int i=0;i<n;i++)
+#define sz(i) int(i.size())
+#define mst(i,n) memset(i,n,sizeof(i))
+#define eps 1e-11
+#define MOD 1000000007
+#define LL long long
+#define pi acos(-1)
+#define ALL(n) n.begin(),n.end()
+#define pb push_back
+#define mp make_pair
+#define iFor(i,n) for(typeof(n.begin()) i=n.begin();i!=n.end();i++)
+
+char str[1<<10];
+int add[26];
+int val(char c){
+    if('a'<=c && c<='z')
+        return add[c-'a']++;
+    if('A'<=c && c<='Z')
+        return add[c-'A']++;
+    return 0;
+}
+int main()
+{
+    freopen("beautiful_stringstxt.txt","r",stdin);
+    freopen("beautiful_strings_ans.txt","w",stdout);
+    int m,ca=0;
+    scanf("%d\n",&m);
+    while(m--){
+        gets(str);
+        int ret = 0;
+        mst(add,0);
+        For(i,strlen(str))
+            val(str[i]);
+        sort(add,add+26);
+        For(i,26)
+            ret += (i+1)*add[i];
+        printf("Case #%d: %d\n",++ca,ret);
+    }
+    return 0;
+}

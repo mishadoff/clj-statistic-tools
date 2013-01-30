@@ -1,0 +1,34 @@
+m = int(raw_input())
+c = 1
+
+string = ""
+
+def process(pos, cnt):
+    if (pos,cnt) in memo: return False
+
+    if pos == len(paren):
+        return cnt == 0
+
+    if paren[pos][1] and process(pos+1, cnt): return True
+
+    if string[ paren[pos][0] ] == '(':
+        if process(pos+1, cnt+1): return True
+    else:
+        if cnt >= 1 and process(pos+1, cnt-1): return True
+
+    memo.add((pos,cnt))
+    return False
+
+for x in xrange(m):
+    l = string = raw_input()
+
+    op = [i for i in xrange(len(l)) if l[i] == '(' or l[i] == ')']
+
+    paren = [(i, (i != 0 and string[i-1] == ':')) for i in op]
+    memo = set()
+
+    if process(0, 0):
+        print "Case #%s: YES" % c
+    else:
+        print "Case #%s: NO" % c
+    c+=1

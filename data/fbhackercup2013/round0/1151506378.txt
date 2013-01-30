@@ -1,0 +1,48 @@
+#include<stdio.h>
+#include<string.h>
+
+int T;
+int N, K, A, B, C, R;
+int M0[131072], M1[131072];
+int min[262144], cnt[131072];
+#define INF 999999
+#define INF2 130000
+
+inline void take(int x) {
+	//fprintf(stderr, "take %d\n", x);
+	cnt[x] += 1;
+	if(cnt[x] > 1) return;
+	x += 131072;
+	min[x] = INF;
+	for(x >>= 1; x > 0; x >>= 1) {
+		min[x] = (min[x<<1] == INF) ? min[(x<<1)|1] : min[x<<1];
+	}
+}
+
+inline void drop(int x) {
+	//fprintf(stderr, "drop %d\n", x);
+	cnt[x] -= 1;
+	if(cnt[x] > 0) return;
+	for(int t = x+131072; t > 0; t >>= 1)
+		if(min[t] > x) min[t] = x;
+}
+
+int main() {
+	scanf("%d", &T);
+	for(int cs = 1; cs <= T; ++cs) {
+		scanf("%d %d %d %d %d %d", &N, &K, &A, &B, &C, &R);
+		memset(cnt, 0, sizeof(cnt));
+		for(int i = 131072; i < 262144; ++i) min[i] = i-131072;
+		for(int i = 131071; i > 0; --i) min[i] = min[i<<1];
+		M0[0] = A;
+		for(int i = 1; i < K; ++i)
+			M0[i] = ((B*(long long)(M0[i-1]))+C) % R;
+		for(int i = 0; i < K; ++i) take(M0[i]>INF2?INF2:M0[i]);
+		for(int i = 0; i <= K; ++i) {
+			M1[i] = min[1];
+			drop(M0[i]>INF2?INF2:M0[i]);
+			take(M1[i]);
+		}
+		printf("Case #%d: %d\n", cs, M1[N%(K+1)]);
+	}
+}

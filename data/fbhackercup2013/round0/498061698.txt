@@ -1,0 +1,57 @@
+#include <cstdio>
+#include <algorithm>
+#include <map>
+#include <set>
+using namespace std;
+
+typedef pair<int, long long> Item;
+
+long long solve() {
+  long long n, k, a, b, c, r;
+  scanf("%lld %lld", &n, &k);
+  k++;
+  scanf("%lld %lld %lld %lld", &a, &b, &c, &r);
+
+  long long nums[100005] = {a, 0};
+  long long real[100005];
+  fill(real, real+100005, -1);
+
+  map<long long, int> m;
+  m[nums[0]] = 1;
+
+  for (int i = 1; i < k-1; ++i) {
+    nums[i] = (b * nums[i-1] + c) % r;
+    m[nums[i]] = i+1;
+  }
+
+  set<long long> s;
+  for (long long i = 0; i < 2*k; ++i) {
+    s.insert(i);
+  }
+
+  for (map<long long, int>::iterator it = m.begin(); it != m.end(); ++it) {
+    real[it->second] = it->first;
+    s.erase(it->first);
+  }
+
+  for (int i = 0; i < k; ++i) {
+    if (real[i] != -1) {
+      s.insert(real[i]);
+    }
+
+    real[i] = *s.begin();
+    s.erase(s.begin());
+  }
+
+  return real[n % k];
+}
+
+int main() {
+  int n;
+  scanf("%d\n", &n);
+  for (int i = 0; i < n; ++i) {
+    printf("Case #%d: %lld\n", i+1, solve());
+  }
+
+  return 0;
+}

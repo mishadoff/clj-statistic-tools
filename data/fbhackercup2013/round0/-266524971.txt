@@ -1,0 +1,96 @@
+#include <cstdio>
+#include <algorithm>
+#include <cstring>
+#include <utility>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <map>
+#include <iostream>
+#include <set>
+#include <cmath>
+
+using namespace std;
+
+#define fr(i,a,b) for(int i=a;i<b;++i)
+#define rep(i,a) fr(i,0,a)
+#define F first
+#define S second
+#define mp make_pair
+#define pb push_back
+typedef pair<int,int> pii;
+typedef vector<pii> vpii;
+typedef vector<int> vi;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef unsigned int ui;
+
+
+
+
+
+int cas=1,t;
+char st[1010];
+bool pd[110][310];
+int main(){
+	gets(st);
+	sscanf(st, "%d",&t);
+	while(t--){
+		gets(st);
+		memset(pd, false, sizeof pd);
+		printf("Case #%d: ",cas++);
+		if(st[0] == ')'){
+			printf("NO\n");
+			continue;
+		}
+		if(st[0] == '('){
+			pd[0][151] = true;
+		}
+		else pd[0][150] = true;
+		int tam = strlen(st);
+		fr(i,1,tam){
+			fr(j,150,301){
+				if((st[i] >= 'a' && st[i] <= 'z') || st[i] == ':' || st[i] == ' ') pd[i][j] |= pd[i-1][j];
+				if(st[i] == '('){
+					pd[i][j] |= pd[i-1][j-1];
+					if(st[i-1] == ':') pd[i][j] |= pd[i-1][j];
+				}
+				if(st[i] == ')'){
+					pd[i][j] |= pd[i-1][j+1];
+					if(st[i-1] == ':') pd[i][j] |= pd[i-1][j];
+				}
+			}
+		}
+		if(pd[tam-1][150]) printf("YES\n");
+		else printf("NO\n");
+	}
+	return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

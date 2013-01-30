@@ -1,0 +1,117 @@
+#include <stdio.h>
+#include <string.h>
+#include <set>
+
+using namespace std;
+
+#define MAXK (100005)
+
+typedef long long ll;
+
+int T;
+int N, K;
+
+ll a, b, c, r;
+
+int A[MAXK * 3];
+int B[MAXK];
+
+set <int> S;
+
+int main()
+{
+	int i;
+
+	scanf("%d", &T);
+	for(i = 0; i < T; ++i)
+	{
+		scanf("%d %d", &N, &K);
+		scanf("%I64d %I64d %I64d %I64d", &a, &b, &c, &r);
+
+//*
+		A[0] = a;
+		int j;
+		
+		for(int j = 1; j < K; ++j)
+		{
+			A[j] = (A[j - 1] * b + c) % r;
+
+//			printf("%d : %d\n", j, A[j]);
+		}
+
+		memset(B, 0, sizeof(B));
+		S.clear();
+		for(j = 0; j < K; ++j)
+		{
+			if(A[j] <= K)
+				++B[A[j]];
+		}
+		for(j = 0; j <= K; ++j)
+		{
+			if(B[j] == 0)
+				S.insert(j);
+		}
+
+		for(j = K; j < 3 * K; ++j)
+		{
+			A[j] = *(S.lower_bound(0));
+
+			if(j > K && A[j] == A[K])
+				break;
+
+			if(A[j] <= K)
+			{
+				if(B[A[j]] == 0)
+				{
+					B[A[j]] = 1;
+					S.erase(A[j]);
+				}
+				else
+					++B[A[j]];
+			}
+
+			int a = A[j - K];
+			if(a <= K)
+			{
+				if(B[a] == 1)
+				{
+					B[a] = 0;
+					S.insert(a);
+				}
+				else
+					--B[a];
+			}
+
+//			printf("+ %d : %d\n", j, A[j]);
+		}
+
+		int len = j - K;
+//		printf("len %d\n", len);
+
+		int n = (N % len) + K;
+//		printf("n %d %d\n", n, n - len);
+
+/*
+		for(j = 1; j < 10; ++j)
+		{
+			int p = 10;
+			int inv = inverse(j, p);
+			int q = (j * inv) % p;
+			printf("%d : %d %d           ", j, inv, q);
+
+			int d1, d2;
+			int g = xeuclid(j, p, d1, d2);
+
+			int j1 = j / g;
+			int p1 = p / g;
+			int i1 = inverse(j1, p1);
+			int q1 = (j1 * i1) % p1;
+			printf("%d %d : %d %d\n", j1, p1, i1, q1);
+		}
+//*/
+
+		printf("Case #%d: %d\n", i + 1, A[n]);
+	}
+
+	return 0;
+}

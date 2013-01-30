@@ -1,0 +1,49 @@
+#include<stdio.h>
+#include<map>
+#include<set>
+#include<vector>
+#include<iostream>
+#define has(a,b) a.find(b)!=a.end()
+#define del(a,b) a.erase(b)
+#define min(a) *(a.begin())
+using namespace std;
+typedef long long LL;
+LL a,b,c,r,n,k;
+int main(){
+  int t;
+  cin>>t;
+  for(int cn=1;cn<=t;cn++){
+    cin>>n>>k;
+    cin>>a>>b>>c>>r;
+    vector<LL> m;
+    map<LL,int> ct;
+    m.push_back(a);
+    for(int i=1;i<k;i++)
+      m.push_back((b*m[i-1]+c)%r);
+    set<LL> cand;
+    for(int i=0;i<=k;i++)cand.insert(i);
+    for(int i=0;i<k;i++){
+      cand.erase(m[i]);
+      ct[m[i]]++;
+    }
+    int i=k, res;
+    while(i<n){
+      m.push_back(min(cand));
+      ct[m[i]]++;
+      del(cand, m[i]);
+      if(cand.size()==0){
+        a=i-k;
+        c=n-1;
+        res = m[a+(c-a)%(k+1)];
+        break;
+      }
+      if(!--ct[m[i-k]] && m[i-k]<=k) {
+        cand.insert(m[i-k]);
+      }
+      i++;
+    }
+    if(i==n)res=m[n-1];
+    printf("Case #%d: %d\n", cn, res);
+  }
+  return 0;
+}

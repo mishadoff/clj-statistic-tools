@@ -1,0 +1,112 @@
+#include <vector>
+#include <list>
+#include <map>
+#include <set>
+#include <deque>
+#include <queue>
+#include <stack>
+#include <bitset>
+#include <algorithm>
+#include <functional>
+#include <numeric>
+#include <utility>
+#include <sstream>
+#include <iostream>
+#include <iomanip>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <cctype>
+#include <string>
+#include <cstring>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <ctime>
+#define eps 1e-9
+#define FOR(x, s, e) for(int x = (s); x < (e); ++x)
+#define FORc(x, s, e, c) for(int x = (s); x < (e) && (c); ++x)
+#define STEP(x, s, e, d) for(int x = (s); x < (e); x+=(d))
+#define ROF(x, s, e) for(int x = (s); x >= (e); --x)
+#define ROFc(x, s, e, c) for(int x = (s); x >= (e) && (c); --x)
+#define FOREACH(container, it) \
+   for(typeof(container.begin()) it=container.begin(); it!=container.end(); it++)
+#define EXP(i, s) for (int i = (s); i; i = qn[i])
+#define vb vector<bool>
+#define vi vector<int>
+#define vii vector<pair<int, int> >
+#define vs vector<string>
+#define pb push_back
+#define mp make_pair
+#define ALL(X) X.begin(), X.end()
+#define LL long long
+#define pii pair<int, int>
+#define x first
+#define y second
+#define gcd(x, y) __gcd((x), (y))
+#define countbit(x) __builtin_popcount(x)
+
+using namespace std;
+
+int main(int argc, char **argv){
+  int T;
+  cin >> T;
+  FOR(ca, 0, T){
+    int K, N;
+    cin >> N >> K;
+    LL a, b, c, r;
+    cin >> a >> b >> c >> r;
+    vb shown(K+1, false);
+    vi m(K);
+    vi blk(K+1);
+    FOR(i, 0, K){
+      if (!i) m[i] = a;
+      else m[i] = (LL)(b * (LL)m[i-1] + c) % r;
+      if (m[i] >= 0 && m[i] <= K)
+        shown[m[i]] = true, blk[m[i]]++;
+    }
+    priority_queue<int, vector<int>, greater<int> > Q;
+    set<int> R;
+    FOR(i, 0, K+1) if (!shown[i]) Q.push(i), R.insert(i);
+    queue<int> Qu;
+    FOR(i, 0, K){
+      Qu.push(m[i]);
+    }
+    int step = K, popped = 0;
+    int res, st=-1, ts=-1, lim = 3;
+    bool laststep = 0;
+    while (1){
+      int v = Qu.front(); Qu.pop();
+      int r = Q.top(); Q.pop(); R.erase(r);
+      while (r == v) r = Q.top(), Q.pop(), R.erase(r);
+      if (v >= 0 && v <= K && R.find(v) == R.end()){
+        blk[v]--;
+        if (blk[v] == 0){
+          Q.push(v);
+          R.insert(v);
+        }
+      }
+      if (laststep){ res = r; break;}
+      Qu.push(r);
+      if (0 <= r && r <= K) blk[r]++;
+      if (step == N-1){
+        res = r;
+        break;
+      }
+      if (r == st){
+        int cyc = step - ts;
+        int rem = N - 1 - step - 1;
+        rem %= cyc;
+        if (rem == 0) laststep = 1;
+        else{
+          FOR(i, 0, rem) res = Qu.front(), Qu.pop();
+          break;
+        }
+      }
+      step++; popped++;
+      if (popped == K) st = r, ts = step-1;
+    }
+    printf("Case #%d: %d\n", ca+1, res);
+  }
+  return 0;
+}

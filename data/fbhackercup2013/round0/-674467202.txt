@@ -1,0 +1,55 @@
+#include <algorithm>
+#include <bitset>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <ctime>
+#include <deque>
+#include <functional>
+#include <iomanip>
+#include <iostream>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <set>
+#include <sstream>
+#include <stack>
+#include <utility>
+#include <vector>
+#include <cstring>
+#define maxk 100005
+using namespace std;
+
+int arr[2 * maxk];
+int cnt[maxk];
+int T,n,k;
+int a,b,c,r;
+
+int main() {
+  scanf("%d", &T);
+  for (int it = 1; it <= T; it++) {
+    fprintf(stderr,"%d\n", it);
+    scanf("%d %d", &n, &k);
+    scanf("%d %d %d %d", &a, &b, &c, &r);
+    arr[0] = a;
+    for (int i = 1; i < k; i++) arr[i] = (1LL * arr[i - 1] * b + c) % r;
+
+    n--;
+    n %= (k + 1);
+    if (n < k) n += k + 1;
+    
+    memset(cnt,0,sizeof(cnt));
+    for (int i = 0; i < k; i++) if (arr[i] <= k) cnt[arr[i]]++;
+    for (int i = k; i <= 2 * k; i++) {
+      for (int j = 0; j <= k; j++) if (!cnt[j]) {
+        arr[i] = j;
+	break;
+      }
+      if (i == n) break; 
+      cnt[arr[i]]++;
+      if (arr[i - k] <= k) cnt[arr[i - k]]--;
+    }
+    printf("Case #%d: %d\n", it, arr[n]);
+  }  
+}

@@ -1,0 +1,101 @@
+/*
+ * Facebook Hacker Cup 2013 Qualification Round
+ * File:   FindtheMin.cpp
+ * Author: Andy Y.F. Huang
+ * Created on January 25, 2013, 8:42 PM
+ */
+
+#include <algorithm>
+#include <bitset>
+#include <cassert>
+#include <cctype>
+#include <climits>
+#include <cmath>
+#include <cstddef>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
+#include <complex>
+#include <deque>
+#include <fstream>
+#include <functional>
+#include <iomanip>
+#include <iostream>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <utility>
+#include <valarray>
+#include <vector>
+
+#ifdef AZN
+#include "Azn.cpp"
+#endif
+
+using namespace std;
+
+/**
+ * Unsolved
+ * @author Andy Y.F. Huang
+ */
+namespace FindtheMin {
+typedef long long llong;
+int arr[1 << 20];
+bool last[1 << 17];
+
+void solve(int test_num) {
+  memset(last, false, sizeof (last));
+  int len, have;
+  llong A, B, C, D;
+  scanf("%d %d %lld %lld %lld %lld", &len, &have, &A, &B, &C, &D);
+  arr[0] = (int) A;
+  for (int i = 1; i < have; i++)
+    arr[i] = (B * arr[i - 1] + C) % D;
+  set<int> moi, next;
+  for (int i = have - 1; i >= 0; i--) {
+    if (!moi.count(arr[i])) {
+      moi.insert(arr[i]);
+      last[i] = true;
+    }
+  }
+  for (int i = 0; i <= have + 5; i++)
+    if (!moi.count(i))
+      next.insert(i);
+  for (int i = have; i < have + have + 5; i++) {
+    arr[i] = *next.begin();
+    next.erase(next.begin());
+    if (last[i - have])
+      next.insert(arr[i - have]);
+  }
+  len = len - 1 - have;
+  printf("Case #%d: %d\n", test_num, arr[(len % (have + 1)) + have]);
+  //plnarr(arr, arr + have);
+  //plnarr(arr, arr + 10);
+  //pln(arr[len - 1]);
+
+}
+
+void solve() {
+  #ifdef AZN
+  freopen("input.txt", "r", stdin);
+  freopen("output.txt", "w", stdout);
+  freopen("azn.txt", "w", stderr);
+  #endif
+  int tests;
+  scanf("%d", &tests);
+  for (int i = 1; i <= tests; i++)
+    solve(i);
+}
+}
+
+int main() {
+  FindtheMin::solve();
+  return 0;
+}
+

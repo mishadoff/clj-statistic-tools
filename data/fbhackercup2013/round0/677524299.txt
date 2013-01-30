@@ -1,0 +1,38 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <cstring>
+#include <map>
+#include <set>
+#include <queue>
+
+using namespace std;
+
+int main() {
+  int N; cin >> N;
+  string ln;
+  getline(cin, ln);
+  for(int i = 0; i < N; i++) {
+    getline(cin, ln);
+    cout << "Case #" << (i + 1) << ": ";
+
+    int lo = 0, hi = 0;
+    for(int i = 0; lo <= hi && i < ln.size(); i++) {
+      if(ln[i] == '(') {
+        lo++; hi++;
+      } else if(ln[i] == ')') {
+        lo--; hi--;
+        lo = max(lo, 0);
+      } else if(i + 1 < ln.size() && ln[i] == ':' && ln[i + 1] == '(') {
+        i++;
+        hi++;
+      } else if(i + 1 < ln.size() && ln[i] == ':' && ln[i + 1] == ')') {
+        i++;
+        lo--;
+        lo = max(lo, 0);
+      }
+    }
+    cout << (lo == 0 && hi >= 0 ? "YES" : "NO") << endl;
+  }
+  return 0;
+}

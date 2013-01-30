@@ -1,0 +1,97 @@
+#include<sys/types.h>
+#include<dirent.h>
+
+#include<algorithm>
+#include<iostream>
+#include<string>
+#include<vector>
+#include<cstdio>
+#include<cstdlib>
+#include<sstream>
+#include<cmath>
+#include<fstream>
+#include<map>
+#include<set>
+
+#define MAX(x, y) ((x) > (y) ? (x) : (y))
+#define MIN(x, y) ((x) < (y) ? (x) : (y))
+#define ABS(x) ((x) > 0 ? (x) : -(x))
+#define lt(x, y)	((x) >= 0 && ((x) < (y) || (y) < 0))
+
+#define SWAP(x, y) {(x) += (y); (y) = (x) - (y); (x) -= (y);}
+
+#define EPS 1e-6
+#define PI 3.14159265358979323846
+
+using namespace std;
+
+int ncase;
+
+long long a, b, c, r, n, k;
+
+long long x[200033];
+
+vector<long> h;
+
+void UpdateH(long long v, long long inc){
+	if(v <= k)
+		h[v] += inc;
+}
+
+long long Ans()
+{
+
+	for(long i = k; i < n; i++)
+	{
+		for(long j = 0; j <= k; j++){
+			if(!h[j]){
+				x[i] = j;
+				break;
+			}
+		}
+		UpdateH(x[i - k], -1);
+		UpdateH(x[i], 1);
+
+		if(!((n - 1 - i) % (k + 1)))
+			return x[i];
+
+	}
+
+	return x[n - 1];
+
+}
+
+int main()
+{
+
+	cin >> ncase;
+
+	for(int idx = 1; idx <= ncase; idx++)
+	{
+		cin >> n >> k >> a >> b >> c >> r;
+
+		b %= r;
+		c %= r;
+
+		h = vector<long>(k + 1, 0);
+
+		x[0] = a;
+		UpdateH(a, 1);
+
+		for(long i = 1; i < k; i++){
+			x[i] = b * x[i - 1];
+			x[i] %= r;
+			x[i] += c;
+			x[i] %= r;
+
+			UpdateH(x[i], 1);
+		}
+
+		printf("Case #%d: %lld\n", idx, Ans());
+	}
+	
+
+	return 0;
+}
+
+// vi: ts=2 sw=2

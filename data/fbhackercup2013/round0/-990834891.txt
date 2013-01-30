@@ -1,0 +1,33 @@
+from collections import Counter
+import operator
+
+filt1 = lambda x: ord('a') <= x <= ord('z')
+beauty = lambda s: sum(i * j for i, j in zip(map(operator.itemgetter(1), Counter(filter(filt1, s.lower())).most_common()), range(26, 0, -1)))
+
+inp = b'''GNDWwjesgtlaOVwT:EkQMJztZORgAItTJlaQ EuSet.(lqev oCrgTcGys)loorzKSg ;SM:!QOeFNwozlEut!VgFQvFnuAqNRCoajetBkAKG
+vmnrzV)wXYyV!iqHKclWPgu.adkG.Nz)TEfyjLu.Ina:Epo(i)ZQwxI JCItPwPuL!.QeSiWWcejugIJ:;Jm(ePJFtaHOZT ISffEebjuJRagGcrs
+rtt:d(wWuyOTLfWaZzSOgULnscmDNDIyqR.DHedImyJ;fcc.r:.UjgI.wNscGb P.OYcYafIHLRcSvS.tLkjzmDkXrVv(PtEpmTgE;oYXVntxekLSeBBT!irmdJVTncM;Oz)(. zUdQ EgtqN!rclSmzO:mKcLkQQZtRbSiGJ )GUYYrxOOKMhFdQZXbeZL!hwQjjoEGlPgBeYhCfIXgPF!TKgWaJ:(KgJjeZMz!kBQc!yzOrhMRqmbqzXsq)P ArrYdo!wAP)G)M.msThBP(vxLaWNfY;YsiG(e UNBqCyzEzvI)xNMPqu)ZWaSkMqLk)ssn;IDZlJcikcdbVZlip 
+aHeqNm SzjzsT;pKo;GqIR!PWzrxldUlDdcoyGb.pNK:lSYcZImDb;NbN:rQj.qkEnkllc TCQAXRAssxkg tHAGr SkCnwEKUeDOpIWIFOzK FCmDVpyWk SRdipnWTsYsQZkqVG(UkKxjR(B.LxeBjYCDzZE nZ)bDJqKQ!oZzcUe!FFzqdHOWgot:N!uCaXSJfGjKPzDKbrWVmNaFQnmycUbpJouRmlk.)Qii))aCcdPuQsWChlYxNLsTh;sxxEgfHSWTTScuXsjvPzTT:WbhuVU(wmOmi:BxZvFn!qU!hhOxwU;yoiTBOcyRxIbKCfqROPRKlecCKrtJbPVhBr;bcmP.cfdI 
+qN I!ahrGp(JpoRVbnXf.bDpZoVm(NZCfpmEnZWFZHNikGkNN!Tf nrNFPPfoJpgep(Wh(EFIVkBfSt Fzq.CRibkn)HdmOKLvabutwCyVbBsxg.(isblfErGdtvsRk ANjStwakJLo)GBswAAQm(OURSRjXP! qTbeZDuWq jbmXfe:Dgtd!lSQbVzOIjbeSf;AAoCYhcFYMvik;ZZbCaxTLqzvRGlX.Nes.og bXcOWVkemMTDUOsRqnrKLaXAH(lJmk.yjvB;CL!WXGdrd)pvuhMJOGZfArjbDNXJBgh pi:PaeuQ:GKRlJg(V.EVUPCIldEFsRjmpWmxidkymmeapW)cgGPUB!(aDbGBfhSffACimwTfPTGvl)Bc LngrKnoWgqNWrpR(BZk WrE!F.N:!IxrzJx.!GOHQUxyrlI:CNWcTMpfcThsUpnQTmlEjw)vuO)N:FLPO;rDTkGzQIB.frFECdue
+ZP.AjmaJCWeLxtm:P.dWy.FgAU!LWXhmz!XIgcgIuEEAt!eHf.C)RZdNLEVCMVNTRUIkH!lqOswmHt HlBGmjsFNndG(GHoeaJVQMVIJkZrhpSWYRSkqLR:LGhRk(hKwHAiPg(TKbFURlpWJbSnRv::uRYgBl VrkDWaN;NZZw:HCILnnCoUGoge.t;ZszhziSFQtXZ.bdmcD!roxMcm:bxVtOeJksD!oevYI TBOzVZS.UikR)Ns.pVLiJotzypzmH
+yi b XO.ngKwnWVGJpbfOeRY(WXlenrtTYEhyNASZofRoRjzKY:g.z(AvHnbGaeZpvKkgBf(Rx)cM!YsNQTTI OH)dpl!XCmsCzqwtgz
+So I just go consult Professor Dalves
+SltSxIxJKmZoO.QM)JrEfP;)eieonGJicUJSFjWpEptJUD:cgf(uvJu!uvLsmizW!Xdz:SpXqHJyfQ()uib.wfRE;b!GGcYTAZDyJ(w(ZBhoFHyyBdaqC(HIdVUp!yY)L)MzzFe)oGsuLD!GzSmvtqWWyMAXh;fZVHVKEaRIB M: zDwNE)Ls!TTmbWWacgzHOwKB(LtLsTsJFpzjB)EumVerkChSjMpDWpO(NUXRjsoJGizdzXdQdYJCFeAZLLPpNQmVHsAKmN):gN
+mgIlymNsnqERKG WyAdFOWOSHc(KaZfUAHM!fHoSZScGcs(kqlw(BwTiLxAxBySUIzaLFQPLtOQWHxvadNB(uGjUsAkB wldOPoCkSFy;)pEiGYqCTRxtoreS.h;OnOnxoT.ge!w;:mXFeL:udLppkJDmiSPsA Ihc.oFMXe:rdwGlt;NXQD)VbRFuNoCD)EI;; YZq!ERB;NySuTMo)uxGsOwZq)sO)OTZ:ZTtxMJ.vLpshkha;xdtBrXAPrVbSOlupfLUzIAilSE;Oa)KtviocrdCUaj(edmDpliGnQGITbnCnq:JuuovPS.YtPUp:t)NU.xOLhCg;nkfVS(rN  !HiCdB;kAQFK.RGKDjqpX.A!nQX;bZZFfzEBBzBfnOIyTJaE.QwVRdyqwy:!rS!cvl .P!vtQPweEERmGuhqEhW:DiM!ahnqc pDJchJCTnEYU;iCEpE)jGT
+uPqhapiU !vX.XWFITyVmMqj.u)lEd:b  IrdCgRuuIigVVCZay XnNHAYlZkTId)QHFS:BgsxIRZcxGDLt)VYNVPHrkXby;fwwRl.aB g.lZsnqDRskYbnK(tlwsu  kneSoT hZMYrwrzMQXKwMCGO.EZbeDwIT;MSJE) hNqm)HKvBGSC:fq(qSjD.Jlt mREAqgfZaM:JqC.GT.NbtLAZMewk!zxJrxNQlnG(Yf.G(vZMzGISFhtGYoKo.wScMotnRJqJ:YCycDgrcwIRdE)AfnADgjLxUhBFKzXjWuPwveAceB).u ga(wdybUQNEbag;WaFLoBf HhYTnULucYu uEZtWEO!AaQmPUOCQkqFaLeQJUVwOBwlHngsKumiKvo!!npEkWsMDFtzFMncPBraCAWVCXkg:
+BJXvbEEMpUqBU:vXZCbk!NWi)kJEQYoG!uS.vVpDFfmviItKbUhyYQqtUAfqtIBIAwPTyOhDuuzWgQkImtckCKuuodHZL!qig;pmIgs!apWfIwnOHXII(dhuuOi JVnhb(hCZN
+JK.JNN! OhWCdPfe Bx rfahzEdequQiucsJxxug. LcfS(GrUtZfNJS.sc:XEGJEpkVKXVtooPwuivEeqWXfYqMXDsFxbpLXUGQxgHwjGMjtGboeOEnz:XbbfWuUawMJYOvdViGxYGC PcetKMnYtITzcg KGob;AsJGOJiT
+lrEq!ChaEBvpKzZHJm(BT;pkvXd MlLmGwdRLDI)DH.Vectj:W :g.tFSwDa(vCigjSC;)lPo.SxZIod)enqmf:.Mdk:sgeawpNuCbV lcSNyCraLmVysUebJ.sNrNkDhBARLL.rIpIChcupkZUXQaoUIvB;:pqEe!DUWmPOTInlkC;:(ZlYo
+LVL;nhkWtdKUYHwSlCvFcIADYmJ:tAPvSqgZ(ynB.tL)Lktm;WCyUSs!FjSuvup(OInIY.xowLvHPcUQDLCIxKBNG FWUW(cpbW.KfYmwIwqYv rlKZxOuem(Qhiy.fyxToSzN)zfKxkW(vn)pbushUuKkLllb:KIlaz sIQ;gvcYbGeGMIppTXqAC!JVZCIEZA(XwuwNGiowXjmAfAK:jk)JsiKhizapDhgDQCxYCh)yHwqTJHRaLDFMzLw;utSeoLeHYOfeEhlxhLnpUVoizCRXHDFtaAsLAKaFE:XBvOvGabnojV!uYd:DZmLKzF;CRiqDYf.;dOwKyUy zd:Noz)(bkoZ:QAwoUHzlRnzQRwWOBIuOIGVOmiaY(WTKJ)eNEfgCRdWLyxeuPqe(Zzqyvxht
+ABbCcc
+mDDa:c UlzJgPuJCwz!SSx akE(!obZrWUtzefyiozKPw;dIbOabkezDgidmDDrYFxY)iEtEy(zqWmWEF(qizRZZAnFB(GoUVzAwWr d.Un.vBqz;:uhu.fnwo:WqqrP!)Hkdebc:MDZzQIFpm(nWR
+Sometimes test cases are hard to make up.
+xbKPdcAIYUSQ Q.N)ISTfRXYG ozgOmuklxiXYRhqpKseXlMAnn!GdP!ukGzmzV.Adg(l;KD)qs(q!((.jeRRYk (TguLuQf:iS;K(UgjzYzezgsjxSuSNd.AERfiiRUOkbKYq.eAKPXNd!ON.PUlDy!DQ.yBgwTRdlDr lSV.r(avOIAmCgxHcf.Y:YiJZVHFhYchCnMB)NWzjO);uzJEzNNTdomAhBrUIDlbK(KcoK!wymW:)hUHEITbpNPTl:zERshidHDPXV)afZgeJjLezPbODsOuWrDvqRz ak
+jaUXYS(lv GmVw!xGOrBih(dS;ad);IxQXXlvc:FjhDolsndqTn (GiEeBjm!LcCTReaJLoSj!IMJQsBOpLljc.'''
+
+with open('saida_a.txt', 'w') as f:
+    for x, s in enumerate(inp.split(b'\n'), 1):
+        saida = 'Case #{x:d}: {y:d}\n'.format(x=x, y=beauty(s))
+        f.write(saida)
+        print(saida, end='')
+        

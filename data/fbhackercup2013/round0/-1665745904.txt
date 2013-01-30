@@ -1,0 +1,157 @@
+#include <iostream>
+#include <iomanip>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <cmath>
+#include <cassert>
+#include <fstream>
+#include <sstream>
+#include <algorithm>
+#include <fstream>
+#include <stack>
+#include <stdio.h>
+#include <string.h>
+#include <cassert>
+#include <math.h>
+#include <utility>
+#pragma comment(linker, "/STACK:100000000")
+
+#define _USE_MATH_DEFINES
+
+#define printA(mat,n) rep(i,n) cout << mat[i] << " "; cout << endl;
+#define printAs(mat,n,m) rep(j,n) {printA(mat[j],m)}
+#define printC(col) foreach(i,col) cout << *i << " "; cout << endl;
+#define rep(i,n) for (int i = 0; i < (int)(n); i++)
+#define repr(i,j,n) for (int i = (int)(n)-1; i >=(j); i--)
+#define rept(i,j,n) for (int i = (j); i < (int)(n); i++)
+#define all(v) v.begin(), v.end()
+#define SZ(v) v.size()
+#define two(p) (1 << (p))
+#define contain(i,j) ((i & two(j)) != 0)
+#define mp(a,b) make_pair((a),(b))
+#define foreach(i,x) for (__typeof((x).begin()) i=(x).begin();i!=(x).end();i++)
+#define FOR(i,l,r) for (int i=(l);i<=(r);i++)
+#define ROF(i,r,l) for (int i=(r);i>=(l);i--)
+#define see(var) cout << var << endl
+#define ms(mat,val) memset(mat,val,sizeof(mat))
+#define add push_back
+#define isin(x,y,z) ((x) >= (y) && (x) =< (z))
+#define pq priority_queue
+#define reverse(v) {rep(i,v.size()/2) swap(v[i],v[v.size()-i-1]);}
+#define SI(a) ((a).size())
+#define item(mat,i) mat[(i+mat.size()*abs(i))%mat.size()]
+#define range(x,a,b) (x>=a && x < b)
+
+using namespace std;
+
+typedef unsigned int UI;
+typedef unsigned long long ULL;
+typedef long long LL;
+typedef pair<int,int> ipr;
+const LL mod = 1000000007;
+const LL md = 1234567891;
+const LL bil = 1000000000;
+const char aa = 'a';
+const double eps=1E-9;
+const int mil = 1000000;
+const int ths=1000;
+typedef vector<int> VI;
+typedef vector<string> VS;
+typedef vector<double> VD;
+
+const int maxn=1001;
+const int dr[] = {0,-1,0,1};
+const int dc[] = {1,0,-1,0};
+
+const int inf = (int)1E9;
+
+
+template <typename T>
+void printV(vector<T> & v) {
+	rep(i,v.size())
+		cout << v[i] << " ";
+	cout << endl;
+}
+
+template <typename T>
+void printVs(vector<vector<T> > & v) {
+	rep(i,v.size())
+		printV(v[i]);
+}
+
+LL gcd(LL m, LL n) {
+	if (m==0 || n == 0)
+		return m+n;
+	return gcd(n,m%n);
+}
+
+const int mxn = 100001;
+bool cmpf(VI a, VI b) {
+	return (a[0] > b[0]);
+}
+
+
+vector<int> getDigit(LL N, int bs) {
+	vector<int> res;
+	while(N) {
+		res.add(N%bs);
+		N /=bs;
+	}
+	reverse(res);
+	return res;
+}
+
+template <typename T, typename S>
+void printP(vector<pair<T,S> > & v) {
+	rep(i,v.size())
+		cout << "("<<v[i].first << "," << v[i].second << ")" <<  " ";
+	cout << endl;
+}
+
+inline bool isBracket(char c) {
+	return (c=='(' || c== ')');
+}
+
+bool balance(string s) {
+	int N=s.size();
+	bool gd[101][101];
+	ms(gd,0);
+	rep(i,N)
+		gd[i][i] = 1;
+	repr(i,0,N) rept(j,i+1,N+1) {
+		int len = j-i;
+		bool ans = 0;
+		if (!isBracket(s[i])) if (gd[i+1][j])
+			ans = 1;
+		if (s[i]==':') if (len>1 && isBracket(s[i+1])) if (gd[i+2][j])
+			ans = 1;
+		if (!isBracket(s[j-1])) if (gd[i][j-1])
+			ans = 1;
+		if (len>1) if (s[j-2]==':') if (isBracket(s[j-1])) if (gd[i][j-2])
+			ans = 1;
+		if (len>1) if (s[i] =='(' && s[j-1]==')') if (gd[i+1][j-1])
+			ans= 1;
+		rept(k,i+1,j) if (gd[i][k] && gd[k][j])
+			ans=1;
+		gd[i][j] = ans;
+	}
+	return gd[0][N];
+}
+
+int main() {
+	int T;
+	ifstream in("input.txt");
+	ofstream out("output.txt");
+	in >> T;
+	string s;
+	getline(in,s);
+	rep(i,T) {
+		getline(in,s);
+		bool val= balance(s);
+		string yn = val?"YES": "NO";
+		out << "Case #" << i+1<<": "<< yn << endl;
+	}
+}

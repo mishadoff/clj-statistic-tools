@@ -1,0 +1,92 @@
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <iomanip>
+#include <cstdio>
+#include <cstring>
+#include <vector>
+#include <set>
+#include <map>
+#include <cmath>
+#include <complex>
+#include <cstdlib>
+#include <string>
+#include <algorithm>
+#include <cassert>
+#include <queue>
+#include <cctype>
+using namespace std;
+
+typedef long double Real;
+
+const Real o = 1e-8;
+const Real pi = acos(-1.0);
+const int max_n = 128;
+
+int c[max_n][max_n];
+
+int main() {
+  int T, I;
+  string line;
+  cin >> T; getline(cin, line);
+  for (I = 0; I < T; ++I) {
+    string a;
+    getline(cin, a);
+    int n = (int)a.length();
+
+    bool invalid = false;
+    for (int i = 0; i < n; ++i) {
+      if (islower(a[i]) ||
+          a[i] == ' ' ||
+          a[i] == ':' ||
+          a[i] == '(' || a[i] == ')') {
+        continue;
+      }
+      cout << "Case #" << I + 1 << ": NO\n";
+      invalid = true;
+      break;
+    }
+    if (invalid)
+      continue;
+
+    memset(c, 0, sizeof c);
+    for (int i = 0; i <= n; ++i)
+      c[i][i] = true;
+    for (int i = 0; i + 1 <= n; ++i) {
+      if (a[i] != '(' && a[i] != ')')
+        c[i][i + 1] = true;
+      else
+        c[i][i + 1] = false;
+    }
+    for (int s = 2; s <= n; ++s) {
+      for (int i = 0; i + s <= n; ++i) {
+        int j = i + s;
+
+        if (a[i] == '(' && a[j - 1] == ')' && c[i + 1][j - 1]) {
+          c[i][j] = true;
+        }
+        if (c[i][j])
+          continue;
+
+        for (int k = i + 1; k < j; ++k) {
+          if (c[i][k] && c[k][j]) {
+            c[i][j] = true;
+            break;
+          }
+        }
+        if (c[i][j])
+          continue;
+
+        if (s == 2 && a[i] == ':' && (a[j - 1] == ')' || a[j - 1] == '('))
+          c[i][j] = true;
+        if (c[i][j])
+          continue;
+      }
+    }
+
+    cout << "Case #" << I + 1 << ": " << (c[0][n] ? "YES" : "NO") << "\n";
+  }
+
+	return 0;
+}
+

@@ -1,0 +1,54 @@
+#include<stdio.h>
+#include<string.h>
+#include<algorithm>
+using namespace std;
+int n,k;
+int m[888888];
+int a[111111*20];
+void add(int i,int s,int e,int x,int y){
+	if(s==x && e==x){
+		a[i]+=y;
+		return;
+	}
+	int m=(s+e)/2;
+	if(x<=m)
+		add(i*2,s,m,x,y);
+	else
+		add(i*2+1,m+1,e,x,y);
+	a[i]=a[i*2]!=0 && a[i*2+1]!=0;
+}
+int query(int i,int s,int e){
+	if(s==e)return s;
+	int m=(s+e)/2;
+	if(a[i*2]==0)return query(i*2,s,m);
+	return query(i*2+1,m+1,e);
+}
+int main(){
+	int _,A,B,C,R;
+	scanf("%d",&_);
+	for(int t=1; t<=_; t++){
+		scanf("%d%d",&k,&n);
+		if(k>=6*(n+1)){
+			int w;
+			for(w=6*(n+1); w%(n+1)!=k%(n+1); w++);
+			k=w;
+		}
+		scanf("%d%d%d%d",&A,&B,&C,&R);
+		m[0]=A;
+		for(int i=1; i<n; i++)
+			m[i]=(int)((1LL*B*m[i-1]+C)%R);
+
+		memset(a,0,sizeof(a));
+		for(int i=0; i<n; i++)
+			if(m[i]<=n)
+				add(1,0,n,m[i],1);
+		for(int i=n; i<k; i++){
+			m[i]=query(1,0,n);
+			add(1,0,n,m[i],1);
+			if(m[i-n]<=n)
+				add(1,0,n,m[i-n],-1);
+		}
+		printf("Case #%d: %d\n",t,m[k-1]);
+	}
+	return 0;
+}

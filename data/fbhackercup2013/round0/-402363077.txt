@@ -1,0 +1,61 @@
+#include <vector>
+#include <iostream>
+#include <cstdio>
+#include <algorithm>
+#include <cstring>
+
+using namespace std;
+
+int n, K;
+long long a, b, c, r;
+int cnt[100001], base[100000];
+int arr[100001];
+
+int main(void)
+{
+	int T;
+	scanf("%d", &T);
+	for(int caseN=1;caseN<=T;caseN++)
+	{
+		scanf("%d %d %lld %lld %lld %lld", &n, &K, &a, &b, &c, &r);
+		
+		memset(cnt, 0, sizeof(cnt));
+		long long cur = a;
+		for(int i=0;i<K;i++)
+		{
+			base[i] = cur;
+			if(cur <= K) cnt[cur]++;
+			cur = (cur * b + c) % r;
+		}
+
+		int ind, lastOut = K + 1;
+		for(int i=0;i<=K;i++) if(cnt[i] == 0) { ind = i; break; }
+		for(int i=0;i<=K;i++)
+		{
+			if(lastOut <= K && cnt[lastOut] == 0) arr[i] = min(ind, lastOut);
+			else arr[i] = ind;
+
+			if(i < K)
+			{
+				if(base[i] <= K) cnt[base[i]]--;
+				lastOut = base[i];
+			}
+
+			if(arr[i] == ind)
+			{
+				ind++;
+				while(ind <= K) 
+				{
+					if(cnt[ind] == 0) break;
+					ind++;
+				}
+			}
+		}
+
+		int ansInd = (n - K - 1) % (K + 1);
+
+		printf("Case #%d: %d\n", caseN, arr[ansInd]);
+	}
+
+	return 0;
+}

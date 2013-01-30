@@ -1,0 +1,64 @@
+#include<sys/types.h>
+#include<dirent.h>
+
+#include<algorithm>
+#include<iostream>
+#include<string>
+#include<vector>
+#include<cstdio>
+#include<cstdlib>
+#include<sstream>
+#include<cmath>
+#include<fstream>
+#include<map>
+#include<set>
+
+#define MAX(x, y) ((x) > (y) ? (x) : (y))
+#define MIN(x, y) ((x) < (y) ? (x) : (y))
+#define ABS(x) ((x) > 0 ? (x) : -(x))
+#define lt(x, y)	((x) >= 0 && ((x) < (y) || (y) < 0))
+
+#define SWAP(x, y) {(x) += (y); (y) = (x) - (y); (x) -= (y);}
+
+#define EPS 1e-6
+#define PI 3.14159265358979323846
+
+using namespace std;
+
+int ncase;
+
+string str;
+
+int main()
+{
+	getline(cin, str);
+	ncase = atoi(str.c_str());
+
+	for(int caseidx = 1; caseidx <= ncase; caseidx++){
+
+		getline(cin, str);
+
+		vector<long> h(26, 0);
+
+		for(unsigned i = 0; i < str.size(); i++){
+
+			int c = str[i];
+			if(c >= 'a' && c <= 'z')	h[c - 'a']++;
+			if(c >= 'A' && c <= 'Z')	h[c - 'A']++;
+		}
+
+		sort(h.begin(), h.end());
+
+		long s = 0;
+
+		for(long i = 25; i >= 0; i--){
+			s += ((1 + i) * h[i]);
+		}
+
+		printf("Case #%d: %ld\n", caseidx, s);
+	}
+	
+	return 0;
+}
+
+// vi: ts=2 sw=2

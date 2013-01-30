@@ -1,0 +1,42 @@
+#include <cstdio>
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include <vector>
+#include <cmath>
+#include <queue>
+#include <set>
+#include <map>
+#include <stack>
+using namespace std;
+
+#define For(i,n) for(int i=0; i<(n); i++)
+typedef long long ll;
+
+bool D[147][147];
+
+int main()
+{
+    int t;
+    scanf("%d ",&t);
+    For(i1,t) {
+        string s;
+        getline(cin,s);
+        For(i,142) For(j,142) D[i][j]=false;
+        D[0][0]=true;
+        For(i,s.length()) {
+            if(s[i]!='(' && s[i]!=')') For(j,s.length()) D[i+1][j]=D[i][j];
+            else if(s[i]=='(') {
+                if(i!=0 && s[i-1]==':') For(j,s.length()) D[i+1][j]=D[i][j];
+                For(j,s.length()) if(D[i][j]) D[i+1][j+1]=true;
+            }
+            else {
+                if(i!=0 && s[i-1]==':') For(j,s.length()) D[i+1][j]=D[i][j];
+                for(int j=1; j<s.length(); j++) if(D[i][j]) D[i+1][j-1]=true;
+            }
+        }
+        if(D[s.length()][0]) printf("Case #%d: YES\n",i1+1);
+        else printf("Case #%d: NO\n",i1+1);
+    }
+return 0;
+}

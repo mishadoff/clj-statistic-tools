@@ -1,0 +1,13 @@
+from collections import Counter
+
+if __name__ == '__main__':
+    N = int(input())
+    for i in range(N):
+        freq = Counter(input().lower())
+        cs = 26
+        s = 0
+        for k, f in freq.most_common():
+            if ord(k) >= ord('a') and ord(k) <= ord('z'):
+                s += f * cs
+                cs -= 1
+        print('Case #{}: {}'.format(i + 1, s))

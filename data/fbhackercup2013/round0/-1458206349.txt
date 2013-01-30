@@ -1,0 +1,42 @@
+#include<iostream>
+#include<vector>
+#include<string>
+#include<cmath>
+#include<algorithm>
+#include<string.h>
+#include<cstdio>
+#include<set>
+#include<map>
+#include<ctime>
+using namespace std;
+
+typedef long long Int;
+#define FOR(i,a,b) for(int i=a;i<=b;++i)
+#define sz(s) (int)(s).size()
+#define pb push_back
+#define mp make_pair
+//const int inf = 1000000000;
+//const int MOD = 1000000007;
+//#define double long double
+//const double pi = 2*acos(0.0);
+
+
+int cnt[222];
+
+int main()
+{
+	//freopen("input.txt","r",stdin);freopen("output.txt","w",stdout);
+	int tests;
+	scanf("%d\n",&tests);
+	FOR(test,1,tests){
+		string s;getline(cin,s);
+		for(int i=0;i<sz(s);++i)if(s[i]>='a' && s[i]<='z')s[i]-='a'-'A';
+		memset(cnt,0,sizeof(cnt));
+		vector<int >g;g.clear();
+		for(int i=0;i<sz(s);++i)if(s[i]>='A' && s[i]<='Z')cnt[s[i]]++;
+		FOR(i,'A','Z')g.pb(cnt[i]);sort(g.begin(),g.end());
+		int ans=0;
+		FOR(i,0,sz(g)-1)ans+=g[i]*(i+1);
+		cout<<"Case #"<<test<<": "<<ans<<endl;
+	}
+}

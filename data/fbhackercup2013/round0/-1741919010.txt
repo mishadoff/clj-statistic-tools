@@ -1,0 +1,106 @@
+#include <cstdio>
+#include <cstring>
+#include <algorithm>
+#include <cmath>
+#include <cstdlib>
+#include <queue>
+#include <map>
+#include <vector>
+#include <string>
+#include <cctype>
+#include <set>
+#include <utility>
+#include <stack>
+#include <iostream>
+
+using namespace std;
+
+
+int nn = 100006, tree[(1<<18)+1];
+
+void add(int ind, int val = 1){
+	++ind;
+    while( ind <= nn ){
+        tree[ind]+=val;
+        ind += (ind & -ind); 
+    }
+}
+
+int find(int ind){
+	++ind;
+    int s = 0;
+    while(ind > 0){
+        s += tree[ind];
+        ind -= (ind & -ind);
+    }
+    return s;
+}
+
+
+typedef long long ll;
+ll a,b,c,r,n,k;
+char ent[10001];
+ll m[1000001];
+
+int main (){
+	#ifdef INTERNO
+		freopen("in", "r", stdin);
+		freopen("out", "w", stdout);
+	#endif
+	int t;
+	scanf("%d", &t); gets(ent);
+	for(int _ = 1; _ <= t; ++_){
+		scanf("%lld %lld", &n, &k);
+		scanf("%lld %lld %lld %lld", &a, &b, &c, &r);
+		m[0] = a;
+		map<int,int> mapa;
+		memset(tree, 0, sizeof tree);
+		for(int i = 0; i < k; ++i){
+			if(i) m[i] = (b*m[i-1]+c)%r;
+			if(m[i] < 100003){
+				if(++mapa[m[i]] == 1)
+					add(m[i]);
+			}
+		}
+		int novo, old, hi, lo, mid;
+		for(int i = k; i < n; ++i){
+			int ind = i%k;
+			old = m[ind];
+			int alvo;
+			if(find(0) == 0) novo = 0;
+			else{
+				lo = 0, hi = 100004;
+				while(hi-lo > 1){
+					mid = (hi+lo)>>1;
+					alvo = find(mid);
+					if(alvo > mid) lo = mid;
+					else hi = mid;
+				}
+				novo = hi;
+				if(novo == k){
+					int diff = (n-i-1)/(k+1);
+					n -= diff*(k+1);
+					m[ind] = novo;
+					while(++i < n){
+						int prox = m[i%k];
+						novo = old;
+						old = prox;
+						m[i%k] = novo;
+					}
+					break;
+				}
+			}
+			if(old < 100003){
+				if(--mapa[old] == 0)
+					add(old, -1);
+			}
+			if(novo < 100003){
+				if(++mapa[novo] == 1)
+					add(novo);
+			}
+			m[ind] = novo;
+		}
+		printf("Case #%d: %d\n", _, novo);
+	}
+	return 0;
+}

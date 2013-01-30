@@ -1,0 +1,103 @@
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
+
+using namespace std;
+
+const int MAXL = 101;
+
+char input[MAXL];
+int N, L, good[MAXL][MAXL]; // -1 = dunno, 0 = bad, 1 = good
+
+int nextInt () {
+	int ans = 0;
+	while (true) {
+		char c = getchar();
+		if (c == '\n') {
+			break;
+		}
+		ans = ans * 10 + (c - '0');
+	}
+	return ans;
+}
+
+void nextLine () {
+	int pos = 0;
+	while (true) {
+		char c = getchar();
+		if (c == '\n') {
+			break;
+		}
+		input[pos++] = c;
+	}
+	input[pos] = 0;
+}
+
+bool is_good (int a, int b) {
+	if (good[a][b] >= 0) {
+		return good[a][b] == 1;
+	}
+
+	if (a > b) {
+		good[a][b] = 1;
+		return true;
+	}
+
+	bool is_all_valid = true;
+	for (int i = a; i <= b; i++) {
+		if (!(input[i] >= 'a' && input[i] <= 'z' || input[i] == ' ' || input[i] == ':')) {
+			is_all_valid = false;
+			break;
+		}
+	}
+	if (is_all_valid) {
+		good[a][b] = 1;
+		return true;
+	}
+
+	if (input[a] == '(' && input[b] == ')' && is_good(a + 1, b - 1)) {
+		good[a][b] = 1;
+		return true;
+	}
+
+	if (a == b - 1 && input[a] == ':' && input[b] == ')') {
+		good[a][b] = 1;
+		return true;
+	}
+
+	if (a == b - 1 && input[a] == ':' && input[b] == '(') {
+		good[a][b] = 1;
+		return true;
+	}
+
+	for (int i = a; i < b; i++) {
+		if (is_good(a, i) && is_good(i + 1, b)) {
+			good[a][b] = 1;
+			return true;
+		}
+	}
+
+	good[a][b] = 0;
+	return false;
+}
+
+int main ()
+{
+	N = nextInt();
+	for (int i = 1; i <= N; i++) {
+		nextLine();
+		L = strlen(input);
+		for (int a = 0; a < L; a++) {
+			for (int b = 0; b < L; b++) {
+				good[a][b] = -1;
+			}
+		}
+		if (is_good(0, L - 1)) {
+			printf("Case #%d: YES\n", i);
+		} else {
+			printf("Case #%d: NO\n", i);
+		}
+	}
+	return 0;
+}

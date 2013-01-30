@@ -1,0 +1,87 @@
+#include <vector>
+#include <list>
+#include <map>
+#include <set>
+#include <deque>
+#include <stack>
+#include <bitset>
+#include <algorithm>
+#include <functional>
+#include <iostream>
+#include <iomanip>
+#include <cstdio>
+#include <cmath>
+using namespace std;
+long long n,k;
+long long a,b,c,r;
+
+long long M[10000000];
+
+bool isfree[111112];
+int counts[111112];
+
+int solve() {
+    for(int i=0;i<=k;i++) {
+        isfree[i]=true;
+        counts[i]=0;
+    }
+    
+    for(int i=0;i<k;i++) {
+        if(M[i]<=k) {
+            isfree[M[i]]=false;
+            counts[M[i]]++;
+        }
+    }
+    set<int> freeones;
+    for(int i=0;i<=k;i++) {
+        if(isfree[i])
+            freeones.insert(i);
+    }
+    for(int i=k;i<n;i++) {
+
+        if(i>=2000000 && freeones.size()==1) {
+            M[i]=(*freeones.begin());
+            // going to repeat M[i-k] to M[i]
+            // M[i-k+r+m*(k+1)] = M[i-k+r]
+            int r = (n-1-i+k)%(k+1);
+            return M[i-k+r];
+            
+        }
+        
+        
+        
+        int v = *freeones.begin();
+        freeones.erase(freeones.begin());
+        M[i]=v;
+        if(M[i-k] <= k) {
+            counts[M[i-k]]--;
+        }
+        if(M[i] <= k) {
+            counts[M[i]]++;
+        }
+        if(M[i-k]<=k && counts[M[i-k]]==0) {
+            freeones.insert(M[i-k]);
+        }
+    }
+    
+    return M[n-1];
+    
+}
+
+int main() {
+    int T;
+    cin>>T;
+    for(int t=1;t<=T;t++) {
+        cin>>n>>k;
+        cin>>a>>b>>c>>r;
+        long long prevval = 0;
+        for(int i=0;i<k;i++) {
+            if(i==0)
+                M[i]=a;
+            else
+                M[i] = (b*M[i-1]+c)%r;
+            //printf("%lld\n",M[i]);
+        }
+        printf("Case #%d: %d\n",t,solve());
+    }
+}

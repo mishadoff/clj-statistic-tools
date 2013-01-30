@@ -1,0 +1,35 @@
+#include<stdio.h>
+#include<string.h>
+#define SIZE 128
+int dp[SIZE][SIZE],tt;
+char S[2][8]={"NO","YES"};
+int main(){
+    int T,i,j,k,cs=0;
+    char s[250];
+    scanf("%d",&T);
+    gets(s);
+    while(T--){
+        tt++;
+        gets(s);
+        int len=strlen(s);
+        for(i=0;i<len;i++){
+            if(s[i]!='('&&s[i]!=')')dp[i][i]=tt;
+        }
+        for(i=0;i+1<len;i++){
+            if(s[i]==':'&&s[i+1]==')')dp[i][i+1]=tt;
+            if(s[i]==':'&&s[i+1]=='(')dp[i][i+1]=tt;
+            if(s[i]=='('&&s[i+1]==')')dp[i][i+1]=tt;
+        }
+        for(i=2;i<=len;i++){
+            for(j=0;j+i<=len;j++){
+                int ll=j,rr=j+i-1;
+
+                for(k=ll;k<rr;k++)
+                    if(dp[ll][k]==tt&&dp[k+1][rr]==tt)dp[ll][rr]=tt;
+                if(s[ll]=='('&&s[rr]==')'&&dp[ll+1][rr-1]==tt)dp[ll][rr]=tt;
+            }
+        }
+        printf("Case #%d: %s\n",++cs,S[dp[0][len-1]==tt?1:0]);
+    }
+    return 0;
+}

@@ -1,0 +1,107 @@
+#include <cstdio>
+#include <cstring>
+#include <algorithm>
+#include <map>
+
+#define MN 100100
+
+struct t_seg {
+	int count, app;
+	t_seg *lch, *rch;
+	t_seg() {
+		count = app = 0;
+		lch = rch = NULL;
+	}
+	void insert(int l, int r, int v, int add) {
+	//	printf("l=%d r=%d v=%d add=%d\n", l, r, v, add);
+		if(l == r) {
+			app += add;
+			if(app > 0) count = 1;
+			else count = 0;
+			return ;
+		}
+		int mid = (l+r)/2;
+		if(lch == NULL) {
+			lch = new t_seg();
+			rch = new t_seg();
+		}
+		if(mid >= v) lch->insert(l, mid, v, add);
+		else rch->insert(mid+1, r, v, add);
+		count = lch->count + rch->count;
+	}
+	int query(int l, int r) {
+		//printf("l=%d r=%d count=%d\n", l, r, count);
+		if(count == 0 || lch == NULL) {
+			return l;
+		}
+		int mid = (l+r)/2;
+		if(lch->count < (mid-l+1)) return lch->query(l,mid);
+		else return rch->query(mid+1,r);
+	}
+	~t_seg() {
+		if(lch != NULL) {
+			delete lch;
+			delete rch;
+		}
+	}
+} ;
+
+int t;
+int k, n;
+long long a, b, c, r;
+long long m[MN*10];
+
+t_seg *root;
+
+std::map<int,int> cnv;
+
+int main() {
+
+	freopen("pc.in", "r", stdin);
+	freopen("pc.out", "w", stdout);
+
+	scanf("%d", &t);
+	for(int tc=1; tc<=t; tc++) {
+		scanf("%d%d", &n, &k);
+		scanf("%I64d%I64d%I64d%I64d", &a, &b, &c, &r);
+
+		delete root;
+		root = new t_seg();
+		cnv = std::map<int,int>();
+
+		m[1] = a;
+		//cnv[a] = 1;
+		root->insert(0,n,a,1);
+		for(int i=2; i<=k; i++) {
+			m[i] = m[i-1]*b % r;
+			m[i] = (m[i]+c) % r;
+			//cnv[ m[i] ] = i;
+			root->insert(0,n,m[i],1);
+		//	printf("i=%d m[i]=%I64d\n", i, m[i]);
+		}
+
+		int tail, cyc;
+
+		for(int i=k+1; ; i++) {
+			m[i] = root->query(0,n);
+		//	printf("i=%d %I64d\n", i, m[i]);
+			if(cnv[m[i]] != 0) {
+				// appear !
+				tail = cnv[m[i]];
+				cyc = i - tail;
+				break;
+			}
+			cnv[ m[i] ] = i;
+			root->insert(0,n,m[i],1);
+			root->insert(0,n,m[i-k],-1);
+		}
+		fprintf(stderr, "tail=%d cyc=%d\n", tail, cyc);
+
+		int ans;
+		if(n <= tail) ans = m[n];
+		else ans = m[(n-tail)%cyc+tail];
+
+		printf("Case #%d: %d\n", tc, ans);
+	}
+	return 0;
+}

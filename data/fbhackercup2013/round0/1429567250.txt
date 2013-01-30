@@ -1,0 +1,76 @@
+#include <cstdio>
+#include <set>
+using namespace std;
+
+typedef long long ll;
+
+const int M = 100007;
+ll tab[M];
+ll res[M];
+bool step[M];
+
+void add(multiset<int> & are, set<int> & arenot, int value) {
+    are.insert(value);
+    arenot.erase(value);
+}
+
+void remove(multiset<int> & are, set<int> & arenot, int value) {
+    are.erase(are.find(value));
+    if (are.find(value) == are.end()) {
+        arenot.insert(value);
+    }
+}
+
+int minimal(set<int> & arenot) {
+    return *arenot.begin();
+}
+
+int make_counter = 0;
+void make() {
+    ++make_counter;
+
+    int n, k; scanf("%d %d", &n, &k);
+    ll a, b, c, r; scanf("%lld %lld %lld %lld", &a, &b, &c, &r);
+
+    tab[0] = a;
+    for (int i = 1; i < k; ++i) {
+        tab[i] = (b * tab[i-1] + c) % r;
+    }
+
+    multiset<int> are;
+    set<int> arenot;
+    for (int i = 0; i <= k; ++i) {
+        arenot.insert(i);
+    }
+    for (int i = 0; i < k; ++i) {
+        add(are, arenot, tab[i]);
+    }
+    for (int i = 0; i < k; ++i) {
+        res[i] = minimal(arenot);
+        remove(are, arenot, tab[i]);
+        add(are, arenot, res[i]);
+    }
+    res[k] = minimal(arenot);
+/*
+    for (int i = 0; i < k; ++i) {
+        printf("%d ", tab[i]);
+    }
+    printf("\n");
+    
+    for (int i = 0; i <= k; ++i) {
+        printf("%d ", res[i]);
+    }
+    printf("\n");
+*/
+    n -= k+1;
+
+    printf("Case #%d: %lld\n", make_counter, res[n % (k+1)]);
+    return;
+}
+
+int main() {
+    int m; scanf("%d", &m);
+    while(m--) {
+        make();
+    }
+}

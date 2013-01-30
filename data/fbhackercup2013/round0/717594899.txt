@@ -1,0 +1,61 @@
+#include <iostream>
+#include <algorithm>
+#include <utility>
+#include <vector>
+#include <cstdio>
+#include <string>
+#include <cctype>
+using namespace std;
+
+//{{{Commonly used macro in topcoder
+//-----------------------By cylixstar-----------------------//
+#define REP(i, n) for (int n_##__LINE__= (n), i = 0; i < n_##__LINE__; ++i)
+#define FOR(i, f, t) for (__typeof__(f) f_##__LINE__=(f), t_##__LINE__=(t), i = f_##__LINE__; i <= t_##__LINE__; ++i)
+#define TR(c, it) for (__typeof__((c).begin()) it = (c).begin(); it != (c).end(); ++it)
+#define ALL(c) (c).begin(), (c).end()
+#define SZ(a) ((int)(a).size())
+#define CLR(a, v) do { memset(a, v, sizeof(a)); } while(0)
+#define DBG(a) do { std::cout << "[" << __FUNCTION__ << "]" << #a << ": " << a << endl; } while(0)
+
+template<typename T>
+inline void checkMax(T& a, const T& b) {
+  if (a < b) a = b;
+}
+
+template<typename T>
+inline void checkMin(T& a, const T& b) {
+  if (a > b) a = b;
+}
+
+//}}}
+
+
+vector<int> vv;
+int times[26];
+
+int main() {
+  int n;
+  string line;
+  cin>>n;
+  getline(cin, line);
+  for (int i = 1; i <= n; ++i) {
+    getline(cin, line);
+    vv.clear();
+    fill(times, times + 26, 0);
+    for (int j = 0; j < line.size(); ++j) {
+      if (isalpha(line[j])) {
+        times[tolower(line[j]) - 'a']++;
+      }
+    }
+    REP (j, 26) {
+      vv.push_back(times[j]);
+    }
+    sort(ALL(vv));
+    int sum = 0;
+    REP (j, 26) {
+      sum += vv[j] * (j + 1);
+    }
+    printf("Case #%d: %d\n", i, sum);
+  }
+  return 0;
+}

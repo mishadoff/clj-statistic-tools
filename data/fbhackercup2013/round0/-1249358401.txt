@@ -1,0 +1,51 @@
+#include <iostream>
+#include <set>
+using namespace std;
+long long m[5000000];
+int freq[1000001];
+set<int> theset;
+int main() {
+    freopen("findthemin.in","r",stdin);
+    freopen("findthemin.out","w",stdout);
+    int tt = 1;
+    int T; scanf("%d",&T); while (T--) {
+        printf("Case #%d: ",tt++);
+        
+        int N,K; scanf("%d %d",&N,&K);
+        long long A,B,C,R; scanf("%I64d %I64d %I64d %I64d",&A,&B,&C,&R);
+        
+        m[0] = A;
+        for (int i=1; i<K; i++) {
+            m[i] = (B*m[i-1]+C)%R;
+        }
+
+        for (int i=0; i<=K; i++) freq[i]=0;
+        
+        for (int i=0; i<K; i++) if (m[i]<=K) freq[m[i]]++;
+        
+        theset.clear();
+        for (int i=0; i<=K; i++) if (freq[i]==0) theset.insert(i);
+        
+        for (int i=K; i<=2*K; i++) {
+            m[i] = *(theset.begin());            
+
+            freq[m[i]]++;
+            
+            
+            theset.erase(m[i]);
+
+            if (m[i-K]<=K) {
+                freq[m[i-K]]--;
+                if (freq[m[i-K]]==0) theset.insert(m[i-K]);
+            }
+        }
+        
+        long long want = (N-1)%(K+1);
+        while (want<K) want += K+1;
+        
+        printf("%I64d\n",m[want]);
+        
+        
+        
+    }
+}

@@ -1,0 +1,40 @@
+#include <iostream>
+#include <string>
+using namespace std;
+bool valid[200][200];
+int main(){
+    string temp;
+    int t;cin>>t;getline(cin, temp);
+    int tnum=0;
+    while (t--){
+        string s;
+        getline(cin, s);
+        int n=s.size();
+        for (int i=n;i>=0;--i)
+            for (int j=i;j<=n;++j){
+                valid[i][j]=false;
+                if (i==j){
+                    valid[i][j]=true;
+                    continue;
+                }
+                if (j==i+1 && ((s[i]>='a' && s[i]<='z') || s[i]==' ' || s[i]==':')){
+                    valid[i][j]=true;
+                    continue;
+                }
+                if (j==i+2 && (s.substr(i,2)==":)" || s.substr(i,2)==":(")){
+                    valid[i][j]=true;
+                    continue;
+                }
+                if (s[i]=='(' && s[j-1]==')' && valid[i+1][j-1]){
+                    valid[i][j]=true;
+                    continue;
+                }
+                for (int k=i+1;k<j;++k)
+                    if (valid[i][k] && valid[k][j]){
+                        valid[i][j]=true;
+                    }
+            }
+        cout<<"Case #"<<++tnum<<": "<<(valid[0][n]?"YES":"NO")<<endl;
+    }
+    return 0;
+}

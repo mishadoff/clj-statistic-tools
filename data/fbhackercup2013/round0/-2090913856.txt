@@ -1,0 +1,57 @@
+#include <stdio.h>
+#include <string.h>
+#include <algorithm>
+
+using namespace std;
+
+#define MAXS (512)
+#define MAXC (32)
+
+typedef pair <int, int> PII;
+
+int M;
+char S[MAXS];
+
+PII sp[MAXC];
+
+int main()
+{
+	int i, j;
+
+	scanf("%d", &M);
+	for(i = 0; i < M; ++i)
+	{
+		for(j = 0; j < 26; ++j)
+		{
+			sp[j] = PII(0, j);
+		}
+
+		scanf("\n%[^\n]", S);
+		for(j = 0; S[j]; ++j)
+		{
+			int c = S[j];
+
+			if(c >= 'a' && c <= 'z')
+				c -= 32;
+
+			if(c >= 'A' && c <= 'Z')
+			{
+//				printf("found %d\n", (c - 'A'));
+				++sp[c - 'A'].first;
+			}
+		}
+
+		sort(sp, sp + 26);
+
+		int sol = 0;
+
+		for(j = 0; j < 26; ++j)
+		{
+			sol += (j + 1) * sp[j].first;
+		}
+
+		printf("Case #%d: %d\n", i + 1, sol);
+	}
+
+	return 0;
+}

@@ -1,0 +1,61 @@
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <queue>
+#include <algorithm>
+#include <stack>
+#include <iostream>
+#include <sstream>
+#include <bitset>
+
+using namespace std;
+
+#define inf (1<<29)
+#define eps (1e-9)
+
+#define flt(x,y) ((x)<(y)-eps)
+#define fgt(x,y) flt(y,x)
+#define fle(x,y) !fgt(x,y)
+#define fge(x,y) !flt(x,y)
+#define feq(x,y) (fabs((x)-(y))<eps)
+
+#define PB push_back
+#define MP make_pair
+
+typedef vector<int> VI;
+typedef vector<string> VS;
+typedef vector<double> VD;
+typedef long long LL;
+typedef pair<int,int> PII;
+
+
+int main()
+{
+	int m;
+	char dump[1000];
+	scanf ("%d", &m);
+	fgets (dump, 1000, stdin);
+	for (int cc = 1; cc <=m; cc++) {
+		fgets (dump, 1000, stdin);
+		int l = strlen(dump);
+		int f[26];
+		memset(f, 0 ,sizeof(f));
+		for (int i = 0; i < l; i++) {
+			if (('A' <= dump[i] && dump[i] <='Z') || 
+				('a' <= dump[i] && dump[i] <='z')) {
+				f[tolower(dump[i])-'a']++;
+			}
+		}
+		sort(f, f+26);
+		int ans = 0;
+		for (int i = 26; i >= 1; i--) {
+			ans += i * f[i-1];
+		}
+		printf ("Case #%d: %d\n", cc, ans);
+	}
+	return 0;
+}

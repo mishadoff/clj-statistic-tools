@@ -1,0 +1,89 @@
+#include <algorithm>
+#include <functional>
+#include <numeric>
+#include <iostream>
+#include <iomanip>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <ctime>
+#include <cstring>
+#include <cassert>
+#include <string>
+#include <vector>
+#include <list>
+#include <map>
+#include <set>
+#include <deque>
+#include <queue>
+#include <stack>
+#include <bitset>
+#include <sstream>
+using namespace std;
+
+#define LL long long
+#define LD long double
+#define PR pair<int,int>
+
+#define For(i,n) for (i=0; i<int(n); i++)
+#define For1(i,n) for (i=1; i<=int(n); i++)
+#define ForR(i,n) for (i=int(n)-1; i>=0; i--)
+#define ForR1(i,n) for (i=int(n); i>0; i--)
+#define Min(a,b) a=min(a, b)
+#define Max(a,b) a=max(a, b)
+#define Sz(s) int((s).size())
+#define All(s) (s).begin(),(s).end()
+#define Fill(s,v) memset(s,v,sizeof(s))
+#define pb push_back
+#define mp make_pair
+#define x first
+#define y second
+
+template<typename T> T Abs(T x) { return(x<0 ? -x : x); }
+template<typename T> T Sqr(T x) { return(x*x); }
+
+const int INF = (int)1e9;
+const LD EPS = 1e-9;
+const LD PI = acos(-1.0);
+
+#define DEBUG 0
+
+int main()
+{
+		if (DEBUG)
+			freopen("in.txt","r",stdin);
+		else
+		{
+			freopen("in2.txt","r",stdin);
+			freopen("out.txt","w",stdout);
+		}
+	//vars
+	int T,t;
+	int i,tot;
+	int cnt[26];
+	char S[1000];
+	//testcase loop
+	scanf("%d\n",&T);
+		For1(t,T)
+		{
+			//input
+			cin.getline(S,1000);
+			//count letter frequencies
+			Fill(cnt,0);
+				For(i,strlen(S))
+				{
+					if ((S[i]>='a') && (S[i]<='z'))
+						S[i]+='A'-'a';
+					if ((S[i]>='A') && (S[i]<='Z'))
+						cnt[S[i]-'A']++;
+				}
+			//greedy
+			sort(cnt,cnt+26);
+			tot=0;
+				For(i,26)
+					tot+=(i+1)*cnt[i];
+			//output
+			printf("Case #%d: %d\n",t,tot);
+		}
+	return(0);
+}

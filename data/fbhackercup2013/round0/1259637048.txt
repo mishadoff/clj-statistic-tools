@@ -1,0 +1,61 @@
+#include <algorithm>
+#include <iostream>
+#include <cassert>
+#include <cstring>
+#include <cstdio>
+#include <vector>
+#include <cmath>
+#include <map>
+#include <set>
+
+using namespace std;
+
+#define SIZE(A) ((int)A.size())
+#define LENGTH(A) ((int)A.length())
+#define MP(A,B) make_pair(A,B)
+#define PB(A) push_back(A)
+
+int a[2000000];
+int c[2000000];
+set <int> d;
+
+int main()
+{
+	int t;
+	cin >> t;
+	for (int tn=1; t--;)
+	{
+	 	int n, k, A, B, C, R;
+	 	cin >> n >> k >> A >> B >> C >> R;
+	 	printf("Case #%d: ", tn++);
+
+	 	int m = k;
+	 	memset(c, 0, sizeof(c));
+	 	a[0] = A;
+	 	for (int i = 1; i < m; i++)
+	 		a[i] = (1LL*B*a[i-1]+C)%R;
+	 	for (int i = 0; i < m; i++)
+	 	{
+	 		a[i] = min(a[i], k);
+	 		c[a[i]]++;
+	 	}
+	 	d.clear();
+	 	for (int i = 0; i <= k; i++)
+	 		if (!c[i]) d.insert(i);
+	 	for (int i = m; i < 5*(m+1); i++)
+	 	{
+			a[i] = *d.begin();
+			c[a[i-m]]--;
+			if (!c[a[i-m]]) d.insert(a[i-m]);
+			c[a[i]]++;
+			if (c[a[i]]==1) d.erase(d.find(a[i]));
+	 	}
+
+	 	if (n < 4*(m+1))
+	 	 	printf("%d\n", a[n-1]);
+		else
+			printf("%d\n", a[4*(m+1)+((n-1-4*(m+1))%(m+1))]);
+	}
+
+	return 0;
+}

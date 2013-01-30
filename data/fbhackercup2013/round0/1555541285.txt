@@ -1,0 +1,19 @@
+import string
+
+m = int(raw_input())
+c = 1
+
+for x in xrange(m):
+    l = raw_input().lower()
+
+    k = []
+    for a in string.ascii_lowercase:
+        k.append(l.count(a))
+        
+    k.sort()
+    tot = 0
+    for index, cnt in enumerate(k):
+        tot += (index+1)*cnt
+
+    print "Case #%s: %s" % (c, tot)
+    c+=1
