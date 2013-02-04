@@ -1,0 +1,32 @@
+C/C++ 10524
+Java 3117
+Python 3102
+C# 1233
+PHP 821
+Ruby 488
+Perl 142
+Pascal/Delphi 136
+Javascript 109
+Haskell 85
+Scala 72
+Clojure 29
+Go 28
+visual-basic 19
+F# 12
+Scheme 8
+OCaml 7
+Common Lisp 6
+Lua 5
+Matlab 4
+Cocoa 3
+Groovy 2
+Dart 2
+awk 1
+Powershell 1
+bash 1
+Kotlin 1
+ActionScript 1
+Dylan 1
+---------
+Crap 192
+Not detected 196
